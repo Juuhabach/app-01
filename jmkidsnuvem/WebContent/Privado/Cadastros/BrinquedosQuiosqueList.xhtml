@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Brinquedos do Quiosque"
+			rendered="#{quiosqueBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable
+					emptyMessage="Não há nenhum brinquedo cadastrado neste quiosque."
+					var="obj" value="#{quiosqueBean.listaBrinquedosQuiosque}"
+					selectionMode="single"
+					selection="#{quiosqueBean.brinquedoQuiosqueSelecionado}"
+					rowKey="#{obj.id}">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{obj.brinquedo.descricao}" />
+					</p:column>
+					<p:column headerText="Chave">
+						<h:outputText value="#{obj.brinquedo.chave}" />
+					</p:column>
+					
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{quiosqueBean.incluirBrinquedoQuiosque}"
+						icon="fa fa-user-plus" update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{quiosqueBean.excluirBrinquedoQuiosque}"
+						icon="fa fa-minus"
+						disabled="#{quiosqueBean.brinquedoQuiosqueSelecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{quiosqueBean.editando eq 'true'}"
+			legend="Inclusão de Brinquedos no Quiosque">
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid"
+				style="margin-top: 20px;">
+				<p:dataTable emptyMessage="Não há nenhum brinquedo ativo."
+					var="obj" value="#{quiosqueBean.listaBrinquedosAtivos}" selectionMode="single"
+					selection="#{quiosqueBean.brinquedoQuiosqueSelecionado.brinquedo}"
+					rowKey="#{obj.id}" rows="6" > 
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Nome" filterBy="#{obj.descricao}" filterMatchMode="contains" sortBy="#{obj.descricao}" >
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+					<p:column headerText="Nome" filterBy="#{obj.chave}" filterMatchMode="contains" sortBy="#{obj.chave}" >
+						<h:outputText value="#{obj.chave}" />
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Adicionar Brinquedo" 
+				            disabled="#{quiosqueBean.brinquedoQuiosqueSelecionado.brinquedo == null}"
+							actionListener="#{quiosqueBean.salvarBrinquedoQuiosque}"
+							icon="fa fa-save"  update="formEdit formList"  />
+				<p:commandButton value="Cancelar"
+					actionListener="#{quiosqueBean.cancelarBrinquedoQuiosque}"
+					icon="fa fa-close" immediate="true" update="formEdit formList"  />
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

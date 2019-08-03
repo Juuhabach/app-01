@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TermoResponsabilidadeQuiosque" pageWidth="226" pageHeight="566" columnWidth="224" leftMargin="1" rightMargin="1" topMargin="19" bottomMargin="19" uuid="a22b7b98-1eaf-4f24-b701-bbdb28f30ba3">
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="mm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jmkids"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="local" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomeCliente" class="java.lang.String"/>
+	<parameter name="cpfCliente" class="java.lang.String"/>
+	<parameter name="nomecidade" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from quiosque.configuracaoquiosque
+ ]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="chavequiosque" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="chavequiosque"/>
+	</field>
+	<field name="idquiosque" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="idquiosque"/>
+	</field>
+	<field name="tempoparasincronizacao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="tempoparasincronizacao"/>
+	</field>
+	<field name="urlintegracao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="urlintegracao"/>
+	</field>
+	<field name="versao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="versao"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="453" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="40" width="225" height="20" uuid="7ea0be8c-21c5-4d3b-bbbc-d20a320f7504"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["JM Kids " + $P{local} + ' ' + $P{nomecidade}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="-10" width="225" height="50" uuid="5586ca5d-91c4-4c52-bcd3-b565c80db4b9">
+					<property name="net.sf.jasperreports.style.scaleImage" value="FillFrame"/>
+					<property name="net.sf.jasperreports.style.vImageAlign" value="MIDDLE"/>
+				</reportElement>
+				<imageExpression><![CDATA["LogoJMKids.jpeg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="-1" y="60" width="226" height="1" uuid="d9935dc7-f915-47bc-ae31-72e0dc2ea6ec"/>
+			</line>
+			<staticText>
+				<reportElement x="27" y="61" width="170" height="19" uuid="7582d6cd-bef7-4cad-87f7-fb5160aace84"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TERMO DE RESPONSABILIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="224" height="14" uuid="238e25b7-f120-4f77-a644-9a19508684e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[É OBRIGATÓRIA A SUPERVISÃO DE UM ADULTO!]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="136" width="204" height="16" uuid="87131b49-c98c-4651-8cc8-53aaa0f9a961">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<text><![CDATA[legalmente responsável por meu _________.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="152" width="110" height="13" uuid="d08ee350-23ce-4fe7-93f0-2261b07521e4"/>
+				<text><![CDATA[(relação com a criança)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="180" width="224" height="20" uuid="1d7455f8-72c1-49c3-9773-4021786c1fca"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[  ________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="190" width="90" height="16" uuid="7f523b27-3c01-45ef-9686-fafd625d9ca1">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<text><![CDATA[(nome da criança)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="218" width="224" height="14" uuid="71b4fe7c-2593-4263-93b5-e6bf5967f15c"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[declaro para os devidos fins ser o responsável por ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="232" width="224" height="14" uuid="520bcbe3-e187-42bd-82a0-85aaad01f5ec"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[quaisquer danos físicos ou materiais que possam]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="246" width="224" height="14" uuid="05530c4d-8a50-4790-98df-555b54602845"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ocorrer a este ou a terceiros causados por ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="260" width="224" height="14" uuid="0640fc6e-500a-4daa-a464-bd80019965af"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[desatenção, negligência ou mau uso, assim como]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="274" width="224" height="14" uuid="c8dbe9b2-bb90-43c6-9eb8-c97d1515941b"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[estou ciente de que qualquer dano causado ao Mini]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="288" width="224" height="14" uuid="07e50822-c1cb-417e-916e-1315cecedf69"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Veículo Elétrico ou ao Controle Remoto será cobrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="302" width="224" height="14" uuid="52277aff-7e2a-409e-8f66-1b29e49c4d12">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[uma taxa de R$ 200,00 ou ressarcimento de danos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="316" width="224" height="14" uuid="45d659ff-5c3f-4731-b1ff-bae967f8e3e4">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[causados a terceiros.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="339" width="224" height="21" uuid="d7fc50d7-ca02-476f-b73e-45a90a54b2b6"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{nomecidade}+"____"+" de "+"________"+" de "+"________."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="380" width="224" height="14" uuid="917ed05e-6cd3-4916-9d33-75937123ee95">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[___________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="394" width="224" height="14" uuid="006f3708-2b32-4a95-91e1-a1afe3c60d11">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Responsável]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="418" width="224" height="14" uuid="9feb8a58-d545-40b1-82c1-e90a9cc211d4">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[(___) _______-________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="438" width="224" height="12" uuid="2b9eeb3c-04dd-4bdf-9c4b-bf6d2eabbfe3"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[TELEFONE COM DDD]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="20" y="106" width="204" height="14" uuid="76af3ad6-dc73-46cd-aabb-fe871ddbb158"/>
+				<textFieldExpression><![CDATA["Eu, "+$P{nomeCliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="122" width="206" height="14" uuid="c56162be-9f0f-48ce-b70a-6d7dd749043d"/>
+				<textFieldExpression><![CDATA["portador do CPF número "+$P{cpfCliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+	<noData>
+		<band height="19">
+			<staticText>
+				<reportElement x="0" y="0" width="225" height="17" uuid="47bfe905-eb59-49e8-b29c-dd80fde65c86"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nenhuma informação encontrada para o filtro informado!]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

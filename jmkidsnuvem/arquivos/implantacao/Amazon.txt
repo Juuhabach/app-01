@@ -1,0 +1,38 @@
+Olá Jaqson,
+
+Seguem informações para acesso do servidor JMKIDS na AWS
+
+Conta de email administrador do servidor (gmail)
+jmkidsadm@gmail.com
+zzsabkmo
+
+Acesso administra��o do servidor AWS
+https://aws.amazon.com/
+email:jmkidsadm@gmail.com
+senha:zzsabkm0$
+
+SSH (Putty e WinSCP)
+porta padrão:22
+endere�o:admin@34.228.64.173
+- não vai senha, deve-se carregar o arquivo de chave privada anexado, como na figura do anexo
+
+Apache Tomcat/9.0.20
+/opt/tomcat
+http://34.228.64.173:8080/
+
+Postgres 9.5
+porta:5432
+databases:postgres (postgres / fabsoft), jmkidsdb (jmkids / jmkidspwd)
+
+URL da app:http://34.228.64.173:8080/jmkidsnuvem
+
+URL dos serviços:
+http://34.228.64.173:8080/jmkidsnuvem/rest/
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getQuiosque/1
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getFuncionarios/1
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getTabelaPreco/1
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getFormaPagamento
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getPromocaoQuiosque/1
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getGrupoCliente
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getBrinquedoNoQuiosque/1
+http://34.228.64.173:8080/jmkidsnuvem/rest/nuvemtoquiosque/getBrinquedoImage/1

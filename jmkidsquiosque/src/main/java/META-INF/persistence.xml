@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="jmkidsquiosque" transaction-type="RESOURCE_LOCAL">
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Quiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Promocao</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Funcionario</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.FuncionarioQuiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.FormaPagamento</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.CaixaMovimento</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Configuracao</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Brinquedo</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.TabelaPreco</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.GrupoCliente</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.Cliente</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.Caixa</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.Usuario</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.ClienteQuiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.TabelaPrecoTempo</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.InativacaoForcada</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.BrinquedoOperacao</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.PromocaoQuiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.nuvem.BrinquedoNoQuiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.ConfiguracaoQuiosque</class>
+		<class>br.upf.fabsoft.jmkidsmodel.quiosque.CaixaMovimentoDois</class>
+		
+		
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/jmkidsquiosque"/>
+			<property name="javax.persistence.jdbc.user" value="jmkids"/>
+			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+			<property name="javax.persistence.jdbc.password" value="jmkidspwd"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/> 
+
+			<property name="hibernate.show_sql" value="true"/>
+			<property name="hibernate.format_sql" value="false"/>
+			<property name="hibernate.use_sql_comments" value="false"/>
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+
+		</properties>
+	</persistence-unit>
+</persistence>

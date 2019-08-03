@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+.ui-layout-center iframe {
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+}
+
+.semBorda tr, .semBorda td {
+	border: none !important;
+}
+</style>
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="100" resizable="false">
+
+			<p:panelGrid styleClass="semBorda">
+			
+				<p:row>
+					<p:column  style="width:150px;"> 
+						<h:graphicImage url="/resources/LogoJMKids.jpeg" style="border:0"
+							width="150px"  />
+					</p:column>
+					
+					<p:column style="width:100%;">
+						<h:form>
+							<p:menubar>
+								<p:menuitem value="Home" url="Home.xhtml" icon="ui-icon-home" />
+								<p:menuitem value="Caixa" url="Caixa.xhtml" target="centro" />
+								<p:menuitem value="Clientes" url="ClienteList.xhtml"
+									target="centro" />
+								<p:menuitem value="Operações" url="Operacoes.xhtml"
+									target="centro" />
+								<p:menuitem value="Sair" action="#{loginBean.sair}" ajax="false"
+									icon="pi pi-sign-out" iconPos="left" />
+							</p:menubar>
+							<p:outputLabel
+							value="Usuário Atual: #{loginBean.usuarioLogado.nome}" />
+						<p:outputLabel value=" - Quiosque: #{loginBean.quiosqueSelecionado.descricao}" />
+						</h:form>
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<iframe name="centro" id="centro" frameborder="0" />
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</html>

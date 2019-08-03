@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title></title>
+</h:head>
+<h:body onload="#{loginBean.onLoad()}">
+	<h:form rendered="#{loginBean.configuracaoQuiosque != null}">
+		<p:focus for="login" />
+		<p:growl></p:growl>
+		<div align="center">
+			<h:graphicImage url="/resources/LogoJMKids.jpeg" style="border:0"/>
+		</div>
+		<p:panelGrid columns="2"
+			style="position: absolute; left: 50%; top: 50%; margin-left:-400px; margin-top:-85px;">
+			<f:facet name="header">
+				<p:outputLabel value="Autenticação" />
+			</f:facet>
+			<p:outputLabel value="Email:" for="login" />
+			<p:inputText id="login" size="80" maxlength="150"
+				value="#{loginBean.login}" />
+			<p:outputLabel value="Senha:" for="senha" />
+			<p:password id="senha" size="15" maxlength="40"
+				value="#{loginBean.senha}" />
+			<f:facet name="footer">
+				<p:commandButton value="Entrar" action="#{loginBean.entrar}"
+					ajax="false" />
+			</f:facet>
+		</p:panelGrid>
+	</h:form>
+	
+	<h:form rendered="#{loginBean.configuracaoQuiosque == null}">
+		<p:growl></p:growl>
+		<div align="center">
+			<h:graphicImage url="/resources/LogoJMKids.jpeg" style="border:0"/>
+		</div>
+		<br/>
+		<br/>
+		<div align="center">
+			<h3>É preciso configurar o quiosque para liberar o acesso!</h3>
+		</div>
+	</h:form>	
+</h:body>
+</html>

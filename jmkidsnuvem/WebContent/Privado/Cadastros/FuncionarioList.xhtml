@@ -1,0 +1,237 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Funcionários"
+			rendered="#{funcionarioBean.editando eq 'false' and funcionarioBean.editandoSenha eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum funcionário cadastrado."
+					var="obj" value="#{funcionarioBean.lista}" selectionMode="single"
+					selection="#{funcionarioBean.selecionado}" rowKey="#{obj.id}"
+					rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas.">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+					<p:column headerText="Cidade">
+						<h:outputText value="#{obj.nomeCidade}" />
+					</p:column>
+					<p:column headerText="Email">
+						<h:outputText value="#{obj.email}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{funcionarioBean.incluir}" icon="fa fa-plus"
+						update="formEdit formList" />
+					<p:commandButton value="Editar"
+						actionListener="#{funcionarioBean.editar}" icon="fa fa-edit"
+						disabled="#{funcionarioBean.selecionado == null}"
+						update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{funcionarioBean.excluir}" icon="fa fa-trash"
+						disabled="#{funcionarioBean.selecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+					<p:commandButton value="Alterar Senha"
+						actionListener="#{funcionarioBean.editar}" icon="fa fa-edit"
+						disabled="#{funcionarioBean.selecionado == null}"
+						onclick="PF('dialogoSenha').show();"
+						update="formEditSenha formList" />	
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{funcionarioBean.editando eq 'true'}"
+			legend="Edição de Funcionários">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:outputLabel for="codigo" value="Código" />
+				<p:inputNumber id="codigo" value="#{funcionarioBean.selecionado.id}"
+					disabled="true" decimalPlaces="0" />
+				<br />
+				<p:outputLabel for="nome" value="Nome" />
+				<p:inputText id="nome" value="#{funcionarioBean.selecionado.nome}" />
+				<br />
+				<p:outputLabel for="rg" value="RG" />
+				<p:inputMask id="rg" mask="9999999999"
+					value="#{funcionarioBean.selecionado.rg}" />
+				<br />
+				<p:outputLabel for="cpf" value="CPF" />
+				<p:inputMask id="cpf" value="#{funcionarioBean.selecionado.cpf}"
+					mask="999.999.999-99" />
+				<br />
+				<p:outputLabel for="ctpsNumero" value="Nº CTPS" />
+				<p:inputText id="ctpsNumero" 
+					value="#{funcionarioBean.selecionado.ctpsNumero}" />
+				<br />
+				<p:outputLabel for="ctpsSerie" value="Série CTPS" />
+				<p:inputText id="ctpsSerie" 
+					value="#{funcionarioBean.selecionado.ctpsSerie}" />
+				<br />
+				<p:outputLabel for="endereco" value="Endereço" />
+				<p:inputText id="endereco"
+					value="#{funcionarioBean.selecionado.endereco}" />
+				<br />
+				<p:outputLabel for="numero" value="Número" />
+				<p:inputText id="numero" 
+					value="#{funcionarioBean.selecionado.numero}" />
+				<br />
+				<p:outputLabel for="complemento" value="Complemento" />
+				<p:inputText id="complemento"
+					value="#{funcionarioBean.selecionado.complemento}" />
+				<br />
+				<p:outputLabel for="bairro" value="Bairro" />
+				<p:inputText id="bairro"
+					value="#{funcionarioBean.selecionado.bairro}" />
+				<br />
+				<p:outputLabel for="cep" value="CEP" />
+				<p:inputMask mask="99.999-999" id="cep"
+					value="#{funcionarioBean.selecionado.cep}" />
+				<p:outputLabel for="nomeCidade" value="Cidade" />
+				<p:inputText id="nomeCidade"
+					value="#{funcionarioBean.selecionado.nomeCidade}" />
+				<br />
+				<p:outputLabel for="ufCidade" value="Estado" />
+				<p:selectOneMenu id="ufCidade"
+					value="#{funcionarioBean.selecionado.ufCidade}">
+					<f:selectItem itemValue="" itemLabel="Escolha um estado" />
+					<f:selectItem itemValue="AC" itemLabel="Acre" />
+					<f:selectItem itemValue="AL" itemLabel="Alagoas" />
+					<f:selectItem itemValue="AP" itemLabel="Amapá" />
+					<f:selectItem itemValue="AM" itemLabel="Amazonas" />
+					<f:selectItem itemValue="BA" itemLabel="Bahia" />
+					<f:selectItem itemValue="CE" itemLabel="Ceará" />
+					<f:selectItem itemValue="DF" itemLabel="Distrito Federal" />
+					<f:selectItem itemValue="ES" itemLabel="Espírito Santo" />
+					<f:selectItem itemValue="AM" itemLabel="Amazonas" />
+					<f:selectItem itemValue="GO" itemLabel="Goiás" />
+					<f:selectItem itemValue="MA" itemLabel="Maranhão" />
+					<f:selectItem itemValue="AM" itemLabel="Amazonas" />
+					<f:selectItem itemValue="MT" itemLabel="Mato Grosso" />
+					<f:selectItem itemValue="MS" itemLabel="Mato Grosso do Sul" />
+					<f:selectItem itemValue="MG" itemLabel="Minas Gerais" />
+					<f:selectItem itemValue="PA" itemLabel="Pará" />
+					<f:selectItem itemValue="PB" itemLabel="Paraíba" />
+					<f:selectItem itemValue="PA" itemLabel="Pará" />
+					<f:selectItem itemValue="PR" itemLabel="Paraná" />
+					<f:selectItem itemValue="PE" itemLabel="Pernambuco" />
+					<f:selectItem itemValue="PI" itemLabel="Piauí" />
+					<f:selectItem itemValue="RR" itemLabel="Roraima" />
+					<f:selectItem itemValue="RO" itemLabel="Rondônia" />
+					<f:selectItem itemValue="RJ" itemLabel="Rio de Janeiro" />
+					<f:selectItem itemValue="RN" itemLabel="Rio Grande do Norte" />
+					<f:selectItem itemValue="RS" itemLabel="Rio Grande do Sul" />
+					<f:selectItem itemValue="SC" itemLabel="Santa Catarina" />
+					<f:selectItem itemValue="SP" itemLabel="São Paulo" />
+					<f:selectItem itemValue="SE" itemLabel="Sergipe" />
+					<f:selectItem itemValue="TO" itemLabel="Tocantins" />
+				</p:selectOneMenu>
+				<br />
+				<p:outputLabel for="email" value="Email"
+					rendered="#{funcionarioBean.selecionado.id == null}" />
+				<p:inputText id="email" value="#{funcionarioBean.selecionado.email}" />
+				<br />
+				<p:outputLabel for="foneUm" value="Telefone 1" />
+				<p:inputMask mask="(99)99999-9999" id="foneUm"
+					value="#{funcionarioBean.selecionado.foneUm}" />
+				<br />
+				<p:outputLabel for="foneDois" value="Telefone 2" />
+				<p:inputMask mask="(99)99999-9999" id="foneDois"
+					value="#{funcionarioBean.selecionado.foneDois}" />
+				<br />
+				<p:outputLabel for="dataAdmissao" value="Data de Admissão" />
+				<p:calendar value="#{funcionarioBean.selecionado.dataAdmissao}"
+					mode="popup" pattern="dd/MM/yyyy" id="dataAdmissao" showOn="button"
+					navigator="true" mask="true" />
+				<br />
+				<p:outputLabel for="dataDemissao" value="Data de Demissão" />
+				<p:calendar value="#{funcionarioBean.selecionado.dataDemissao}"
+					mode="popup" pattern="dd/MM/yyyy" id="dataDemissao" showOn="button"
+					navigator="true" mask="true" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{funcionarioBean.salvar}" icon="fa fa-save"
+					update="formList formEdit" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{funcionarioBean.cancelar}" icon="fa fa-close"
+					immediate="true" update="formList formEdit" />
+			</center>
+		</p:fieldset>
+	</h:form>
+	
+	
+	
+	
+	
+	
+	
+	
+	<p:dialog header="Editar Senha" widgetVar="dialogoSenha" width="500" resizable="false" modal="true">
+	
+		<h:form id="formEditSenha">
+		<p:growl />
+		<p:fieldset rendered="#{funcionarioBean.editando eq 'true'}"
+			legend="Edição de Funcionários">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+
+				<p:outputLabel for="email" value="Email"
+					rendered="#{funcionarioBean.selecionado.id == null}" />
+				<p:inputText id="email" value="#{funcionarioBean.selecionado.email}" />
+				<br />
+				<p:outputLabel for="senha" value="Senha" />
+				<p:password id="senha" feedback="true" weakLabel="Muito fraca"
+					goodLabel="Senha razoável" strongLabel="Senha forte" inline="true"
+					promptLabel="Insira a sua senha" match="confirma" required="true"
+					validatorMessage="A senha e a confirmação estão diferentes"
+					value="#{funcionarioBean.selecionado.senha}" />
+				<br />
+				<p:outputLabel for="confirma" value="Confirme a Senha" />
+				<p:password id="confirma" required="true" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{funcionarioBean.salvar}" icon="fa fa-save"
+					oncomplete="if (!args.validationFailed){ PF('dialogoSenha').hide();}"
+					update="formList formEdit" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{funcionarioBean.cancelar}" icon="fa fa-close"
+					oncomplete="PF('dialogoSenha').hide();"
+					immediate="true" update="formList formEdit" />
+			</center>
+		</p:fieldset>
+	</h:form>
+	
+	</p:dialog>
+	
+	
+	
+	
+	
+</h:body>
+</html>

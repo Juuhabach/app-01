@@ -1,0 +1,96 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+    		.ui-outputlabel  {
+    			font-size: 15px !important;
+    			font-weight: bold;
+    			color: #000000;
+    		}
+	</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+	    <p:growl></p:growl>
+		<p:fieldset legend="Lista de Configurações" rendered="#{configuracaoQuiosqueBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhuma configuração cadastrada." var="obj" value="#{configuracaoQuiosqueBean.lista}" 
+							 selectionMode="single" selection="#{configuracaoQuiosqueBean.selecionado}" rowKey="#{obj.id}"
+							 rows="5" paginator="true"
+                    		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    		 rowsPerPageTemplate="5,10,20"
+                    		 currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas."
+				>
+					<p:ajax event="rowSelect" update="formEdit formList"/>
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Sincronização (min)">	
+						<h:outputText value="#{obj.tempoParaSincronizacao}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir" actionListener="#{configuracaoQuiosqueBean.incluir}"
+		    				 		 disabled="#{configuracaoQuiosqueBean.lista.size() > 0}"
+		    				 		 icon="fa fa-plus" update="formEdit formList"/>
+		    		<p:commandButton value="Editar" actionListener="#{configuracaoQuiosqueBean.editar}"
+		    				 		 icon="fa fa-edit" disabled="#{configuracaoQuiosqueBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>
+		                     		 
+		   			<p:commandButton value="Excluir" actionListener="#{configuracaoQuiosqueBean.excluir}"
+		     				 		 icon="fa fa-trash" disabled="#{configuracaoQuiosqueBean.selecionado == null}"
+		    				 		 onclick="return confirm('Excluir?')" update="formList"/>
+		    		
+		    		<p:commandButton value="Sincronização Nuvem > Quiosque" actionListener="#{configuracaoQuiosqueBean.sincronizar}"
+		    				 		 icon="fa fa-edit" disabled="#{configuracaoQuiosqueBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>
+		                     		 
+					<p:commandButton value="Sincronização Quiosque > Nuvem" actionListener="#{configuracaoQuiosqueBean.sincronizarQuiosqueToNuvem}" 
+		    				 		 icon="fa fa-edit" disabled="#{configuracaoQuiosqueBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>		                     		 
+		                     		 		 		 
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl /> 
+		<p:fieldset rendered="#{configuracaoQuiosqueBean.editando eq 'true'}" legend="Edição de Configurações">
+ 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+ 				<p:outputLabel for="codigo" value="Código"/>
+				<p:inputNumber id="codigo" value="#{configuracaoQuiosqueBean.selecionado.id}" disabled="true"/>
+				<br/>
+				<p:outputLabel for="descricao" value="Tempo para Sincronização" title="Em Minutos"/>
+				<p:inputNumber id="descricao" symbol=" min" symbolPosition="prefix" title="Em Minutos" value="#{configuracaoQuiosqueBean.selecionado.tempoParaSincronizacao}"/>
+				<br/>
+				<p:outputLabel for="idQuiosque" value="Id do Quiosque"/>
+				<p:inputNumber decimalPlaces="0"  id="idQuiosque" value="#{configuracaoQuiosqueBean.selecionado.idQuiosque}"/>
+				<br/>
+				<p:outputLabel for="chaveQuiosque" value="Chave do Quiosque"/>
+				<p:inputText id="chaveQuiosque" value="#{configuracaoQuiosqueBean.selecionado.chaveQuiosque}"/>
+				<br/>
+				<p:outputLabel for="urlIntegracao" value="URL Base Integracao"/>
+				<p:inputText id="urlIntegracao"  
+				              value="#{configuracaoQuiosqueBean.selecionado.urlIntegracao}"/>
+				
+				
+				
+				
+				
+				
+ 			</p:panelGrid>	
+			<br/>
+			<center>
+				<p:commandButton value="Salvar" actionListener="#{configuracaoQuiosqueBean.salvar}"
+								 icon="fa fa-save" update="formList formEdit"/>
+				<p:commandButton value="Cancelar" actionListener="#{configuracaoQuiosqueBean.cancelar}"
+								 icon="fa fa-close" immediate="true" update="formList formEdit"/>
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

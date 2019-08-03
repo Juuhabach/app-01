@@ -1,0 +1,138 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Brinquedos"
+			rendered="#{brinquedoBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum brinquedo cadastrado."
+					var="obj" value="#{brinquedoBean.lista}" selectionMode="single"
+					selection="#{brinquedoBean.selecionado}" rowKey="#{obj.id}"
+					rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                              		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas.">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+					<p:column headerText="Chave">
+						<h:outputText value="#{obj.chave}" />
+					</p:column>
+					<p:column headerText="Desabilitado">
+						<h:outputText value="#{obj.dataHoraDesabilitado}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{brinquedoBean.incluir}" icon="fa fa-plus"
+						update="formEdit formList" />
+					<p:commandButton value="Editar"
+						actionListener="#{brinquedoBean.editar}" icon="fa fa-edit"
+						disabled="#{brinquedoBean.selecionado == null}"
+						update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{brinquedoBean.excluir}" icon="fa fa-trash"
+						disabled="#{brinquedoBean.selecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit" prependId="false" enctype="multipart/form-data">
+		<p:growl />
+		<p:fieldset rendered="#{brinquedoBean.editando eq 'true'}"
+			legend="Edição de Brinquedos">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:outputLabel for="codigo" value="Código" />
+				<p:inputNumber id="codigo" value="#{brinquedoBean.selecionado.id}"
+					disabled="true" />
+				<br />
+				<p:outputLabel for="descricao" value="Descrição" />
+				<p:inputText id="descricao"
+					value="#{brinquedoBean.selecionado.descricao}" />
+				<br />
+				<p:outputLabel for="chave" value="Chave" />
+				<p:inputText id="chave" value="#{brinquedoBean.selecionado.chave}" />
+				<br />
+				<p:outputLabel for="infTecnicas" value="Informações Técnicas" />
+				<p:inputTextarea id="infTecnicas"
+					value="#{brinquedoBean.selecionado.infTecnicas}" />
+				<br />
+				<p:outputLabel for="dataAquisicao" value="Data de Aquisição" />
+				<p:calendar value="#{brinquedoBean.selecionado.dataAquisicao}"
+					pattern="dd/MM/yyyy" mode="popup" navigator="true" mask="true"
+					showOn="button" id="dataAquisicao" />
+				<br />
+				<p:outputLabel for="valorAquisicao" value="Valor de Aquisição" />
+				<p:inputNumber id="valorAquisicao"
+					value="#{brinquedoBean.selecionado.valorAquisicao}" symbol="R$"
+					decimalPlaces="2" />
+				<br />
+				<p:outputLabel for="dataHoraDesabilitado"
+					value="Data e Hora da Desabilitação" />
+				<p:calendar
+					value="#{brinquedoBean.selecionado.dataHoraDesabilitado}"
+					pattern="dd/MM/yyyy HH:mm" mode="popup" navigator="true"
+					mask="true" showOn="button" id="dataHoraDesabilitado" />
+				<br />
+				<p:outputLabel for="motivoDesabilitado"
+					value="Motivo da Desabilitação" />
+				<p:inputText id="motivoDesabilitado"
+					value="#{brinquedoBean.selecionado.motivoDesabilitado}" />
+				<br />
+				<p:outputLabel for="tempoMinimo" value="Tempo Mínimo"
+					title="Em Minutos" />
+				<p:inputNumber id="tempoMinimo"
+					value="#{brinquedoBean.selecionado.tempoMinimo}" symbol="min"
+					symbolPosition="suffix" decimalPlaces="0" title="Em Minutos" />
+				<br />
+
+				<h:outputLabel value="Foto" for="imagem" />
+				<p:fileUpload id="imagem"
+					fileUploadListener="#{brinquedoBean.prepararFoto}"
+					update="imagemSelecao" cancelLabel="Cancelar" fileLimit="100000"
+					fileLimitMessage="Imagem muito grande" label="Escolher imagem"
+					invalidFileMessage="Tipo de imagem inválido"
+					invalidSizeMessage="Imagem muito grande" uploadLabel="Selecionar"
+					allowTypes="/(\.|\/)(jpe?g|png)$/">
+				</p:fileUpload>
+				
+				<h:outputLabel value="Imagem Selecionada: " for="imagemSelecao" />
+				<p:graphicImage cache="false" id="imagemSelecao"  stream="false"
+					value="#{brinquedoBean.fotoSelecionadaStream}" 
+					style="margin: 0 auto;" />
+
+
+
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{brinquedoBean.salvar}" icon="fa fa-save"
+					update="formList formEdit" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{brinquedoBean.cancelar}" icon="fa fa-close"
+					immediate="true" update="formList formEdit" />
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

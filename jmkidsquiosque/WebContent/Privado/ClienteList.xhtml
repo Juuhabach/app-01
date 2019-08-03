@@ -1,0 +1,177 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+    		.ui-outputlabel  {
+    			font-size: 15px !important;
+    			font-weight: bold;
+    			color: #000000;
+    		}
+	</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Clientes" rendered="#{clienteBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum cliente cadastrado." var="obj" value="#{clienteBean.lista}" 
+							 selectionMode="single" selection="#{clienteBean.selecionado}" rowKey="#{obj.cpfOuCnpj}"
+							 rows="5" paginator="true"
+                    		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    		 rowsPerPageTemplate="5,10,20"
+                    		 currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             							{currentPage} de {totalPages} páginas." 
+				>
+					<p:ajax event="rowSelect" update="formEdit formList"/>
+					<p:column headerText="PF ou PJ">
+						<h:outputText value="#{obj.pfOuPj}" />
+					</p:column>
+					<p:column headerText="CPF ou CNPJ">
+						<h:outputText value="#{obj.cpfOuCnpj}" />
+					</p:column>
+					<p:column headerText="Nome">	
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+					<p:column headerText="Cidade/Estado">
+						<h:outputText value="#{obj.nomeCidade} / #{obj.ufCidade}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir" actionListener="#{clienteBean.incluir}"
+		    				 		 icon="fa fa-plus" update="formEdit formList"/>
+		    		<p:commandButton value="Editar" actionListener="#{clienteBean.editar}"
+		    				 		 icon="fa fa-edit" disabled="#{clienteBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>
+		   			<p:commandButton value="Excluir" actionListener="#{clienteBean.excluir}"
+		     				 		 icon="fa fa-trash" disabled="#{clienteBean.selecionado == null}"
+		    				 		 onclick="return confirm('Excluir?')" update="formList"/>
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{clienteBean.editando eq 'true'}" legend="Edição de Clientes">
+ 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+ 				<p:outputLabel for="tipopes" value="PF ou PJ"/>
+				<p:selectOneMenu id="tipopes" value="#{clienteBean.selecionado.pfOuPj}"
+				 disabled="#{clienteBean.selecionado.cpfOuCnpj.length() > 0}"
+				>
+					<f:selectItem itemLabel="Pessoa Física" itemValue="PF"/>
+					<f:selectItem itemLabel="Pessoa Jurídica" itemValue="PJ"/>
+				</p:selectOneMenu>
+				<br/>
+				
+
+			
+ 				<p:outputLabel for="codigo" value="CPF ou CNPJ"/>
+				<p:inputText title="Formato para CPF 999.999.999-99 ou CNPJ 99.999.999/9999-99" 
+				             required="true" requiredMessage="Informe o CPF no formato 999.999.999-99 ou CNPJ no formado 99.999.999/9999-99"
+				             id="codigo" value="#{clienteBean.selecionado.cpfOuCnpj}" 
+				             disabled="#{clienteBean.selecionado.cpfOuCnpj.length() > 0}"
+				             />
+				<br/>
+				<p:outputLabel for="nome" value="Nome"/>
+				<p:inputText id="nome" value="#{clienteBean.selecionado.nome}"/>
+				<br/>
+				
+				<p:outputLabel for="nascimento" value="Data de Nascimento se PF"/>
+				<p:calendar id="nascimento" pattern="DD/mm/yyyy" mask="true" value="#{clienteBean.selecionado.nascimento}"/>
+				<br/>
+				
+				
+				
+				<hr/>
+				
+				
+				
+				<p:outputLabel for="telefoneFixo" value="Telefone Fixo"/>
+				<p:inputText id="telefoneFixo" value="#{clienteBean.selecionado.telefoneFixo}"/>
+
+				<p:outputLabel for="celular" value="Telefone Celular"/>
+				<p:inputText id="celular" value="#{clienteBean.selecionado.celular}"/>
+				<br/>				
+				
+				<p:outputLabel for="endereco" value="Endereço"/>
+ 				<p:inputText id="endereco" value="#{clienteBean.selecionado.endereco}"/>
+ 				<br/>
+ 				<p:outputLabel for="numero" value="Número"/>
+ 				<p:inputNumber id="numero" value="#{clienteBean.selecionado.numero}"/>
+ 				<p:outputLabel for="complemento" value="Complemento"/>
+ 				<p:inputText id="complemento" value="#{clienteBean.selecionado.complemento}"/>
+ 				<br/>
+ 				
+ 				<p:outputLabel for="bairro" value="Bairro"/>
+ 				<p:inputText id="bairro" value="#{clienteBean.selecionado.bairro}"/>
+ 				<br/>
+ 				<p:outputLabel for="cep" value="CEP"/>
+ 				<p:inputMask mask="99.999-999" id="cep" value="#{clienteBean.selecionado.cep}"/>
+ 				<br/>
+ 				<p:outputLabel for="nomeCidade" value="Cidade"/>
+ 				<p:inputText id="nomeCidade" value="#{clienteBean.selecionado.nomeCidade}"/>
+ 				<br/>
+ 				<p:outputLabel for="ufCidade" value="Estado"/>
+ 				<p:selectOneMenu  id="ufCidade" value="#{clienteBean.selecionado.ufCidade}" >
+					<f:selectItem itemValue="" itemLabel="Escolha um estado"></f:selectItem>
+					<f:selectItem itemValue="AC" itemLabel="Acre"></f:selectItem>
+					<f:selectItem itemValue="AL" itemLabel="Alagoas"></f:selectItem>
+					<f:selectItem itemValue="AP" itemLabel="Amapá"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="BA" itemLabel="Bahia"></f:selectItem>
+					<f:selectItem itemValue="CE" itemLabel="Ceará"></f:selectItem>
+					<f:selectItem itemValue="DF" itemLabel="Distrito Federal"></f:selectItem>
+					<f:selectItem itemValue="ES" itemLabel="Espírito Santo"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="GO" itemLabel="Goiás"></f:selectItem>
+					<f:selectItem itemValue="MA" itemLabel="Maranhão"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="MT" itemLabel="Mato Grosso"></f:selectItem>
+					<f:selectItem itemValue="MS" itemLabel="Mato Grosso do Sul"></f:selectItem>
+					<f:selectItem itemValue="MG" itemLabel="Minas Gerais"></f:selectItem>
+					<f:selectItem itemValue="PA" itemLabel="Pará"></f:selectItem>
+					<f:selectItem itemValue="PB" itemLabel="Paraíba"></f:selectItem>
+					<f:selectItem itemValue="PA" itemLabel="Pará"></f:selectItem>
+					<f:selectItem itemValue="PR" itemLabel="Paraná"></f:selectItem>
+					<f:selectItem itemValue="PE" itemLabel="Pernambuco"></f:selectItem> 
+					<f:selectItem itemValue="PI" itemLabel="Piauí"></f:selectItem>
+					<f:selectItem itemValue="RR" itemLabel="Roraima"></f:selectItem>
+					<f:selectItem itemValue="RO" itemLabel="Rondônia"></f:selectItem>
+					<f:selectItem itemValue="RJ" itemLabel="Rio de Janeiro"></f:selectItem>
+					<f:selectItem itemValue="RN" itemLabel="Rio Grande do Norte"></f:selectItem>
+					<f:selectItem itemValue="RS" itemLabel="Rio Grande do Sul"></f:selectItem>
+					<f:selectItem itemValue="SC" itemLabel="Santa Catarina"></f:selectItem>
+					<f:selectItem itemValue="SP" itemLabel="São Paulo"></f:selectItem>
+					<f:selectItem itemValue="SE" itemLabel="Sergipe"></f:selectItem>
+					<f:selectItem itemValue="TO" itemLabel="Tocantins"></f:selectItem>
+				</p:selectOneMenu>
+				<br/>
+ 				<p:outputLabel for="email" value="Email"/>
+ 				<p:inputText id="email" value="#{clienteBean.selecionado.email}"/>
+ 				<br/>
+ 				
+				<p:outputLabel value="Grupo" for="GrupoCliente" />
+				<p:autoComplete id="GrupoCliente" dropdown="true" required="true"
+					multiple="false" forceSelection="true" var="obj"
+					itemLabel="#{obj.descricao}" itemValue="#{obj}"
+					value="#{clienteBean.selecionado.grupoCliente}"
+					converter="grupoClienteConverter"
+					completeMethod="#{clienteBean.completeGrupoCliente}" />
+				<br/>
+ 				
+ 				
+ 			</p:panelGrid>	
+			
+			<hr/>
+			
+			<center>
+				<p:commandButton value="Salvar" actionListener="#{clienteBean.salvar}"
+								 icon="fa fa-save" update="formList formEdit"/>
+				<p:commandButton value="Cancelar" actionListener="#{clienteBean.cancelar}"
+								 icon="fa fa-close" immediate="true" update="formList formEdit"/>
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Promoções do Quiosque"
+			rendered="#{quiosqueBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable
+					emptyMessage="Não há nenhuma promoção cadastrada neste quiosque."
+					var="obj" value="#{quiosqueBean.listaPromocoesQuiosque}"
+					selectionMode="single"
+					selection="#{quiosqueBean.promocaoQuiosqueSelecionado}"
+					rowKey="#{obj.id}">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{obj.promocao.descricao}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{quiosqueBean.incluirPromocaoQuiosque}"
+						icon="fa fa-user-plus" update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{quiosqueBean.excluirPromocaoQuiosque}"
+						icon="fa fa-minus"
+						disabled="#{quiosqueBean.promocaoQuiosqueSelecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{quiosqueBean.editando eq 'true'}"
+			legend="Inclusão de Promoções no Quiosque">
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid"
+				style="margin-top: 20px;">
+				<p:dataTable emptyMessage="Não há nenhum promoção ativo"
+					var="obj" value="#{quiosqueBean.listaPromocoesAtivas}" selectionMode="single"
+					selection="#{quiosqueBean.promocaoQuiosqueSelecionado.promocao}"
+					rowKey="#{obj.id}"  rows="10" >
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Descrição" filterBy="#{obj.descricao}" filterMatchMode="contains" sortBy="#{obj.descricao}" >
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Adicionar Promoção Selecionado" 
+				            disabled="#{quiosqueBean.promocaoQuiosqueSelecionado.promocao == null}"
+							actionListener="#{quiosqueBean.salvarPromocaoQuiosque}"
+							icon="fa fa-save"  update="formEdit formList"  />
+				<p:commandButton value="Cancelar"
+					actionListener="#{quiosqueBean.cancelarPromocaoQuiosque}"
+					icon="fa fa-close" immediate="true" update="formEdit formList"  />
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

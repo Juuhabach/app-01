@@ -1,0 +1,479 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body onload="#{brinquedoOperacaoBean.onLoad()}">
+
+
+
+	<h:form id="form" style="border: none;">
+		<p:growl id="mensagens" />
+		
+		<p:dataGrid var="obj"
+			value="#{brinquedoOperacaoBean.listaBrinquedoNoQuiosque}" columns="4"
+			layout="grid" id="brinquedos" rowIndexVar="rowIndex"
+			emptyMessage="Nenhum brinquedo no quiosque" styleClass="ui-fluid">
+			<h:panelGrid columns="1" border="0"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<center>
+					<p:row>
+						<p:column>
+							<center>
+								<p:graphicImage cache="false" stream="false"
+									value="#{obj.brinquedo.fotoStream}" style="margin: 0 auto;"
+									height="150" width="150" />
+							</center>
+						</p:column>
+					</p:row>
+					
+					
+					
+					<p:row>
+						<p:outputLabel value="#{obj.emUso?'Em Uso':'Disponível'}"></p:outputLabel>
+<p:panelGrid columns="2" border="0" styleClass="ui-panelgrid-blank ui-fluid">
+						<p:commandButton value="Contratar" disabled="#{obj.contratado}"
+							update="formContratar" onclick="PF('dlgContratar').show()"
+							actionListener="#{brinquedoOperacaoBean.contratarBrinquedo(rowIndex)}"
+							icon="fa fa-file-text-o" style="background-color: #0040FF;" />
+							
+						<p:commandButton value="Ativar" disabled="#{!obj.contratado == !obj.emUso}"
+							update="formAtivar" onclick="PF('dlgAtivar').show()"
+							actionListener="#{brinquedoOperacaoBean.ativarBrinquedo(rowIndex)}"
+							icon="fa fa-arrow-up" style="background-color: #33cc33;" />	
+							
+						<p:commandButton value="#{obj.emPausa?'Continuar':'Pausar'}" disabled="#{!obj.emUso}"
+							update="formPausar" onclick="PF('dlgPausar').show()"
+							actionListener="#{brinquedoOperacaoBean.pausarBrinquedo(rowIndex)}"
+							icon="fa fa-pause" style="background-color: #F7D358;" />								
+
+						<p:commandButton value="Desativar" disabled="#{!obj.emUso}"
+							update="formDesativarA formDesativarB"
+							onclick="PF('dlgDesativar').show()"
+							actionListener="#{brinquedoOperacaoBean.desativarBrinquedo(rowIndex)}"
+							icon="fa fa-arrow-down" style="background-color: #ff0000;" />
+						
+						<p:commandButton value="Cancelar" disabled="#{!obj.contratado}"
+							update="formCancelar"
+							onclick="PF('dlgCancelar').show()"
+							actionListener="#{brinquedoOperacaoBean.cancelarBrinquedo(rowIndex)}"
+							icon="fa fa-undo" style="background-color: #8A2908;" />	
+
+						<p:commandButton value="Termo" ajax="#{!obj.emUso}" disabled="#{!obj.contratado}"
+							action="#{brinquedoOperacaoBean.printTermo(rowIndex)}"
+							icon="fa fa-print" style="background-color: #8A2908;" 
+							onclick="this.form.target='_blank'"/>	
+								
+							
+											
+</p:panelGrid>
+
+
+					</p:row>
+				</center>
+			</h:panelGrid>
+		</p:dataGrid>
+	</h:form>
+
+
+
+
+
+	<p:dialog header="Contratar Brinquedo" widgetVar="dlgContratar" modal="true"
+		width="700" height="370" resizable="false">
+		<h:form id="formContratar">
+			<p:panelGrid columns="2" styleClass="ui-panelgrid-blank ui-fluid "
+				columnClasses="label,value">
+
+				
+				<p:commandLink immediate="true" value="Cliente" onclick="PF('dlgCliente').show()"
+				               actionListener="#{brinquedoOperacaoBean.incluirCliente}"></p:commandLink>
+				<p:autoComplete id="Cliente" dropdown="true" required="false"
+					multiple="false" forceSelection="true" var="obj"
+					inputStyle="width:450px;" itemLabel="#{obj.nome}"
+					itemValue="#{obj}"
+					value="#{brinquedoOperacaoBean.selecionado.cliente}"
+					converter="clienteConverter"
+					completeMethod="#{brinquedoOperacaoBean.completeCliente}">
+					<p:column>
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{obj.cpfOuCnpj}" />
+					</p:column>
+
+				</p:autoComplete>
+
+				<p:outputLabel for="dadosSemCadastro"
+					value="Dados Sem Cadastro" />
+				<p:inputText id="dadosSemCadastro" value="#{brinquedoOperacaoBean.selecionado.dadosSemCadastro}"></p:inputText>
+
+				<p:outputLabel for="dataHoraContratado"
+					value="Data e Hora de Contratação" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true"
+					id="dataHoraContratado" disabled="true"
+					value="#{brinquedoOperacaoBean.selecionado.dataHoraContratado}" />
+
+				<p:outputLabel value="Tempo Contratado" for="tempo" />
+				<p:autoComplete id="tempo" dropdown="true" required="true"
+					multiple="false" forceSelection="true" var="obj"
+					inputStyle="width:450px;"
+					itemLabel="#{obj.minutos} min - R$ #{obj.valor}" itemValue="#{obj}"
+					value="#{brinquedoOperacaoBean.selecionado.tabelaPrecoTempo}"
+					converter="tabelaPrecoTempoConverter"
+					completeMethod="#{brinquedoOperacaoBean.completeTabelaPrecoTempo}">
+					<p:ajax event="itemSelect"
+						listener="#{brinquedoOperacaoBean.selecionouTabelaPrecoTempo}"
+						update="formContratar:minutosContA formContratar:valorPrePagoA"></p:ajax>
+				</p:autoComplete>
+
+				<p:outputLabel for="minutosContA" value="Minutos Contratados" />
+				<p:inputNumber id="minutosContA" readonly="true"
+					inputStyle="background-color: silver"
+					value="#{brinquedoOperacaoBean.selecionado.minutosContratados}"
+					decimalPlaces="0" />
+
+				<p:outputLabel for="valorPrePagoA" value="Valor Pré-Pago" />
+				<p:inputNumber id="valorPrePagoA" readonly="true" symbol="R$"
+				    inputStyle="background-color: silver"
+					value="#{brinquedoOperacaoBean.selecionado.valorPrePago}"
+					decimalPlaces="2" />
+
+				<p:outputLabel value="Forma Pagamento" for="formaPagto" />
+				<p:autoComplete id="formaPagto" dropdown="true" required="true"
+					multiple="false" forceSelection="true" var="obj"
+					inputStyle="width:450px;" itemLabel="#{obj.descricao}"
+					itemValue="#{obj}"
+					value="#{brinquedoOperacaoBean.selecionado.formaPrePago}"
+					converter="formaPagamentoConverter"
+					completeMethod="#{brinquedoOperacaoBean.completeFormaPagamento}" />
+
+			</p:panelGrid>
+
+			<div style="height: 15px"></div>
+			<div align="center">
+				<p:commandButton title="Contratar" value="Contratar" update="form"
+					actionListener="#{brinquedoOperacaoBean.contratarBrinquedoGravar}"
+					oncomplete="if (!args.validationFailed){ PF('dlgContratar').hide();}"
+					icon="fa fa-arrow-up" />
+
+				<p:commandButton title="Cancelar" value="Cancelar" update="form"
+					immediate="true" onclick="PF('dlgContratar').hide()"
+					icon="fa fa-close" />
+			</div>
+
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+
+	<p:dialog header="Ativar Brinquedo" widgetVar="dlgAtivar" modal="true"
+		width="700" height="120" resizable="false">
+		<h:form id="formAtivar">
+			<p:panelGrid columns="2" styleClass="ui-panelgrid-blank ui-fluid "
+				columnClasses="label,value">
+				<p:outputLabel for="dataHoraAtivacaoA"
+					value="Data e Hora de Ativação" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true"
+					id="dataHoraAtivacaoA" disabled="true"
+					value="#{brinquedoOperacaoBean.selecionado.dataHoraAtivacao}" />
+			</p:panelGrid>
+
+			<div style="height: 15px"></div>
+			<div align="center">
+				<p:commandButton title="Ativar" value="Ativar" update="form"
+					actionListener="#{brinquedoOperacaoBean.ativarBrinquedoGravar}"
+					oncomplete="if (!args.validationFailed){ PF('dlgAtivar').hide();}"
+					icon="fa fa-arrow-up" />
+
+				<p:commandButton title="Cancelar" value="Cancelar" update="form"
+					immediate="true" onclick="PF('dlgAtivar').hide()"
+					icon="fa fa-close" />
+			</div>
+
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+
+	<p:dialog header="Pausar/Continuar" widgetVar="dlgPausar" modal="true"
+		width="700" height="120" resizable="false">
+		<h:form id="formPausar">
+			<p:panelGrid columns="2" styleClass="ui-panelgrid-blank ui-fluid "
+				columnClasses="label,value">
+				<p:outputLabel for="dataHoraAtivacaoA"
+					value="Data e Hora" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true"
+					id="dataHoraAtivacaoA" disabled="true"
+					value="#{brinquedoOperacaoBean.selecionado.dataHoraEmPausa}" />
+			</p:panelGrid>
+
+			<div style="height: 15px"></div>
+			<div align="center">
+				<p:commandButton  value="#{brinquedoOperacaoBean.brinquedoSelecionado.emPausa?'Continuar':'Pausar'}" update="form"
+					actionListener="#{brinquedoOperacaoBean.pausarBrinquedoGravar}"
+					oncomplete="if (!args.validationFailed){ PF('dlgPausar').hide();}"
+					icon="fa fa-arrow-up" />
+
+				<p:commandButton title="Cancelar" value="Cancelar" update="form"
+					immediate="true" onclick="PF('dlgPausar').hide()"
+					icon="fa fa-close" />
+			</div>
+
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+
+	<p:dialog header="Cancelar Brinquedo" widgetVar="dlgCancelar" modal="true"
+		width="700" height="120" resizable="false">
+		<h:form id="formCancelar">
+			<p:panelGrid columns="2" styleClass="ui-panelgrid-blank ui-fluid "
+				columnClasses="label,value">
+				<p:outputLabel for="dataHoraAtivacaoA"
+					value="Data e Hora do Cancelamento" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true"
+					id="dataHoraAtivacaoA" disabled="true"
+					value="#{brinquedoOperacaoBean.selecionado.dataHoraCancelamento}" />
+			</p:panelGrid>
+
+			<div style="height: 15px"></div>
+			<div align="center">
+				<p:commandButton title="Confirma Cancelar" value="Confirma Cancelar" update="form"
+					actionListener="#{brinquedoOperacaoBean.cancelarBrinquedoGravar}"
+					oncomplete="if (!args.validationFailed){ PF('dlgCancelar').hide();}"
+					icon="fa fa-arrow-up" />
+
+				<p:commandButton title="Não Cancelar" value="Não Cancelar" update="form"
+					immediate="true" onclick="PF('dlgCancelar').hide()"
+					icon="fa fa-close" />
+			</div>
+
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+
+	<p:dialog header="Desativar Brinquedo" widgetVar="dlgDesativar"
+		width="770" height="420" modal="true" resizable="false">
+		<h:form id="formDesativarA">
+			<p:outputLabel value="Cliente: " />
+			<p:inputText
+				value="#{brinquedoOperacaoBean.selecionado.cliente.nome}#{brinquedoOperacaoBean.selecionado.dadosSemCadastro}" size="30"
+				style="background-color: silver" />
+
+			<p:outputLabel value=" Data e Hora de Ativação: " />
+			<p:calendar id="dataHoraAtivacaoD" readonlyInput="true"
+				showOn="false" inputStyle="width:160; background-color: silver"
+				pattern="dd/MM/yyyy HH:mm"
+				value="#{brinquedoOperacaoBean.selecionado.dataHoraAtivacao}" />
+
+			<br />
+			<div style="height: 5px"></div>
+
+			<p:outputLabel value="Contratado: " />
+			<p:inputNumber readonly="true"
+				value="#{brinquedoOperacaoBean.selecionado.minutosContratados}"
+				decimalPlaces="0"
+				inputStyle="width:80; text-align: right; background-color: silver"
+				padControl="false" symbol=" min" symbolPosition="suffix" />
+
+
+			<p:outputLabel for="tempoDecorrido" value=" Decorrido: " />
+			<p:inputNumber id="tempoDecorrido" readonly="true"
+				inputStyle="width:80; text-align: right; background-color: silver"
+				value="#{brinquedoOperacaoBean.selecionado.minutosDecorridos}"
+				padControl="false" symbol=" min" symbolPosition="suffix" />
+
+
+			<p:outputLabel value=" Valor Pré-Pago: " />
+			<p:inputNumber readonly="true" symbol="R$ "
+				inputStyle="width:150; text-align: right; background-color: silver"
+				value="#{brinquedoOperacaoBean.selecionado.valorPrePago}"
+				decimalPlaces="2" />
+
+
+			<br />
+			<div style="height: 5px"></div>
+
+
+			<p:outputLabel for="dataHoraInativacao"
+				value="Data/Hora Inativação: " />
+			<p:calendar id="dataHoraInativacao" mode="popup" showOn="false"
+				pattern="dd/MM/yyyy HH:mm" readonlyInput="true"
+				inputStyle="width:160; background-color: silver"
+				value="#{brinquedoOperacaoBean.selecionado.dataHoraInativacao}" />
+
+
+
+
+			<p:outputLabel for="tempoFlex" value=" Flexibilização: " />
+			<p:inputNumber id="tempoFlex" readonly="true" padControl="false"
+				inputStyle="width:80; text-align: right; background-color: silver"
+				value="#{brinquedoOperacaoBean.selecionado.tabelaPrecoTempo.tabelaPreco.tempoFlexibilizacao}"
+				symbol=" min" symbolPosition="suffix" />
+
+			<p:outputLabel for="tempoExcedido" value="Tempo Excedido: " />
+			<p:inputNumber id="tempoExcedido" readonly="true" padControl="false"
+				inputStyle="width:80; text-align: right; background-color: silver"
+				value="#{brinquedoOperacaoBean.selecionado.minutosDiferenca > 0 ? brinquedoOperacaoBean.selecionado.minutosDiferenca : 0}"
+				symbol="min" symbolPosition="suffix" />
+
+
+		</h:form>
+		<br />
+		<div style="height: 5px"></div>
+
+
+
+
+
+
+		<h:form id="formDesativarB">
+			<p:focus for="formaPagtoPos"></p:focus>
+
+			<p:outputLabel for="valorPosPago" value="Valor Pós-Pago" />
+			<p:inputNumber id="valorPosPago" readonly="true" symbol="R$ "
+				onfocus="this.select()"
+				value="#{brinquedoOperacaoBean.selecionado.valorPosPago}"
+				inputStyle="text-align: right;" decimalPlaces="2" />
+
+			<p:outputLabel value="Forma Pagamento" for="formaPagtoPos" />
+			<p:autoComplete id="formaPagtoPos" dropdown="true" required="false"
+				multiple="false" forceSelection="true" var="obj"
+				inputStyle="width:250px;" itemLabel="#{obj.descricao}"
+				itemValue="#{obj}"
+				value="#{brinquedoOperacaoBean.selecionado.formaPosPago}"
+				converter="formaPagamentoConverter"
+				completeMethod="#{brinquedoOperacaoBean.completeFormaPagamento}" />
+
+
+			<p:panelGrid columns="4" styleClass="ui-panelgrid-blank ui-fluid "
+				columnClasses="label,value">
+
+				<p:outputLabel for="valorDesconto" value="Desconto" />
+				<p:inputNumber id="valorDesconto" readonly="false" symbol="R$ "
+					value="#{brinquedoOperacaoBean.selecionado.valorDesconto}"
+					inputStyle="text-align: right;" decimalPlaces="2" />
+
+				<p:outputLabel for="motivoDesconto" value="Motivo do Desconto" />
+				<p:inputTextarea id="motivoDesconto"
+					value="#{brinquedoOperacaoBean.selecionado.justificativaDesconto}" />
+
+				<p:outputLabel for="valorCredito" value="Credito" />
+				<p:inputNumber id="valorCredito" readonly="false" symbol="R$ "
+					value="#{brinquedoOperacaoBean.selecionado.valorCreditoConcedido}"
+					inputStyle="text-align: right;" decimalPlaces="2" />
+
+				<p:outputLabel for="motivoCredito" value="Motivo do Crédito" />
+				<p:inputTextarea id="motivoCredito"
+					value="#{brinquedoOperacaoBean.selecionado.justificativaCredito}" />
+
+			</p:panelGrid>
+
+
+			<div style="height: 10px"></div>
+			<div align="center">
+				<p:commandButton title="Confirmar Desativação do Brinquedo"
+					value="Confirmar" update="form" validateClient="true"
+					actionListener="#{brinquedoOperacaoBean.desativarBrinquedoGravar}"
+					oncomplete="if (!args.validationFailed){ PF('dlgDesativar').hide();}"
+					icon="fa fa-arrow-down" />
+				<p:commandButton title="Cancelar" value="Cancelar" update="form"
+					immediate="true" onclick="PF('dlgDesativar').hide()"
+					icon="fa fa-close" />
+			</div>
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+
+	<p:dialog header="Cadastro Simples" widgetVar="dlgCliente"
+		width="770" height="420" modal="true" resizable="false">
+
+		<h:form id="formCliente">
+		    
+			<p:focus for="codigo"></p:focus>
+
+			<p:panelGrid columns="2" styleClass="ui-panelgrid-blank ui-fluid ">
+
+ 				<p:outputLabel for="tipopes" value="PF ou PJ"/>
+				<p:selectOneMenu id="tipopes" value="#{brinquedoOperacaoBean.clienteSelecionado.pfOuPj}"
+				 disabled="#{brinquedoOperacaoBean.clienteSelecionado.cpfOuCnpj.length() > 0}"
+				>
+					<f:selectItem itemLabel="Pessoa Física" itemValue="PF"/>
+					<f:selectItem itemLabel="Pessoa Jurídica" itemValue="PJ"/>
+				</p:selectOneMenu>
+			
+ 				<p:outputLabel for="codigo" value="CPF ou CNPJ"/>
+				<p:inputText title="Formato para CPF 999.999.999-99 ou CNPJ 99.999.999/9999-99" 
+				             required="true" requiredMessage="Informe o CPF no formato 999.999.999-99 ou CNPJ no formado 99.999.999/9999-99"
+				             id="codigo" value="#{brinquedoOperacaoBean.clienteSelecionado.cpfOuCnpj}" 
+				             />
+				<p:outputLabel for="nome" value="Nome"/>
+				<p:inputText id="nome" size="55" value="#{brinquedoOperacaoBean.clienteSelecionado.nome}"/>
+				
+				<p:outputLabel for="nascimento" value="Data de Nascimento se PF"/>
+				<p:calendar id="nascimento" pattern="DD/mm/yyyy" mask="true" value="#{brinquedoOperacaoBean.clienteSelecionado.nascimento}"/>
+				
+	
+				<p:outputLabel for="celular" value="Telefone Celular"/>
+				<p:inputText id="celular" value="#{brinquedoOperacaoBean.clienteSelecionado.celular}"/>
+	
+				<p:outputLabel value="Grupo" for="GrupoCliente" />
+				<p:autoComplete id="GrupoCliente" dropdown="true" required="true"
+					multiple="false" forceSelection="true" var="obj"
+					itemLabel="#{obj.descricao}" itemValue="#{obj}"
+					value="#{brinquedoOperacaoBean.clienteSelecionado.grupoCliente}"
+					converter="grupoClienteConverter"
+					completeMethod="#{brinquedoOperacaoBean.completeGrupoCliente}" />
+				<br/>
+	
+
+			</p:panelGrid>
+
+
+			<div style="height: 10px"></div>
+			<div align="center">
+				<p:commandButton title="Cadastrar"
+					value="Confirmar" update="formContratar :form:mensagens"
+					actionListener="#{brinquedoOperacaoBean.salvarCliente}"
+					oncomplete="if (!args.validationFailed){ PF('dlgCliente').hide();}"
+					icon="fa fa-arrow-down" />
+				<p:commandButton title="Cancelar" value="Cancelar" update="formContratar"
+					immediate="true" onclick="PF('dlgCliente').hide()"
+					icon="fa fa-close" />
+			</div>
+
+		</h:form>
+	</p:dialog>
+
+
+
+
+</h:body>
+</html>

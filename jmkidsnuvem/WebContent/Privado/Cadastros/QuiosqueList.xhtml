@@ -1,0 +1,152 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Quiosques"
+			rendered="#{quiosqueBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum quiosque cadastrado."
+					var="obj" value="#{quiosqueBean.lista}" selectionMode="single"
+					selection="#{quiosqueBean.selecionado}" rowKey="#{obj.id}" rows="5"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas.">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+					<p:column headerText="Cidade">
+						<h:outputText value="#{obj.nomeCidade}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{quiosqueBean.incluir}" icon="fa fa-plus"
+						update="formEdit formList" />
+					<p:commandButton value="Editar"
+						actionListener="#{quiosqueBean.editar}" icon="fa fa-edit"
+						disabled="#{quiosqueBean.selecionado == null}"
+						update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{quiosqueBean.excluir}" icon="fa fa-trash"
+						disabled="#{quiosqueBean.selecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+					<p:commandButton value="Funcionarios no Quiosque"
+						actionListener="#{quiosqueBean.formFuncionarios}"
+						icon="fa fa-users" disabled="#{quiosqueBean.selecionado == null}" />
+					<p:commandButton value="Brinquedos no Quiosque"
+						actionListener="#{quiosqueBean.formBrinquedos}"
+						icon="fa fa-users" disabled="#{quiosqueBean.selecionado == null}" />	
+					<p:commandButton value="Promoções no Quiosque"
+						actionListener="#{quiosqueBean.formPromocoes}"
+						icon="fa fa-users" disabled="#{quiosqueBean.selecionado == null}" />	
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{quiosqueBean.editando eq 'true'}"
+			legend="Edição de Quiosques">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:outputLabel for="codigo" value="Código" />
+				<p:inputNumber id="codigo" value="#{quiosqueBean.selecionado.id}"
+					disabled="true" />
+				<br />
+				<p:outputLabel for="descricao" value="Descrição" />
+				<p:inputText id="descricao"
+					value="#{quiosqueBean.selecionado.descricao}" />
+				<br />
+				<p:outputLabel for="endereco" value="Endereço" />
+				<p:inputText id="endereco"
+					value="#{quiosqueBean.selecionado.endereco}" />
+				<br />
+				<p:outputLabel for="numero" value="Número" />
+				<p:inputNumber id="numero"
+					value="#{quiosqueBean.selecionado.numero}" />
+				<br />
+				<p:outputLabel for="complemento" value="Complemento" />
+				<p:inputText id="complemento"
+					value="#{quiosqueBean.selecionado.complemento}" />
+				<br />
+				<p:outputLabel for="bairro" value="Bairro" />
+				<p:inputText id="bairro" value="#{quiosqueBean.selecionado.bairro}" />
+				<br />
+				<p:outputLabel for="cep" value="CEP" />
+				<p:inputMask mask="99.999-999" id="cep"
+					value="#{quiosqueBean.selecionado.cep}" />
+				<br />
+				<p:outputLabel for="nomeCidade" value="Cidade" />
+				<p:inputText id="nomeCidade"
+					value="#{quiosqueBean.selecionado.nomeCidade}" />
+				<br />
+				<p:outputLabel for="ufCidade" value="Estado" />
+				<p:selectOneMenu id="ufCidade"
+					value="#{quiosqueBean.selecionado.ufCidade}">
+					<f:selectItem itemValue="" itemLabel="Escolha um estado"></f:selectItem>
+					<f:selectItem itemValue="AC" itemLabel="Acre"></f:selectItem>
+					<f:selectItem itemValue="AL" itemLabel="Alagoas"></f:selectItem>
+					<f:selectItem itemValue="AP" itemLabel="Amapá"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="BA" itemLabel="Bahia"></f:selectItem>
+					<f:selectItem itemValue="CE" itemLabel="Ceará"></f:selectItem>
+					<f:selectItem itemValue="DF" itemLabel="Distrito Federal"></f:selectItem>
+					<f:selectItem itemValue="ES" itemLabel="Espírito Santo"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="GO" itemLabel="Goiás"></f:selectItem>
+					<f:selectItem itemValue="MA" itemLabel="Maranhão"></f:selectItem>
+					<f:selectItem itemValue="AM" itemLabel="Amazonas"></f:selectItem>
+					<f:selectItem itemValue="MT" itemLabel="Mato Grosso"></f:selectItem>
+					<f:selectItem itemValue="MS" itemLabel="Mato Grosso do Sul"></f:selectItem>
+					<f:selectItem itemValue="MG" itemLabel="Minas Gerais"></f:selectItem>
+					<f:selectItem itemValue="PA" itemLabel="Pará"></f:selectItem>
+					<f:selectItem itemValue="PB" itemLabel="Paraíba"></f:selectItem>
+					<f:selectItem itemValue="PA" itemLabel="Pará"></f:selectItem>
+					<f:selectItem itemValue="PR" itemLabel="Paraná"></f:selectItem>
+					<f:selectItem itemValue="PE" itemLabel="Pernambuco"></f:selectItem>
+					<f:selectItem itemValue="PI" itemLabel="Piauí"></f:selectItem>
+					<f:selectItem itemValue="RR" itemLabel="Roraima"></f:selectItem>
+					<f:selectItem itemValue="RO" itemLabel="Rondônia"></f:selectItem>
+					<f:selectItem itemValue="RJ" itemLabel="Rio de Janeiro"></f:selectItem>
+					<f:selectItem itemValue="RN" itemLabel="Rio Grande do Norte"></f:selectItem>
+					<f:selectItem itemValue="RS" itemLabel="Rio Grande do Sul"></f:selectItem>
+					<f:selectItem itemValue="SC" itemLabel="Santa Catarina"></f:selectItem>
+					<f:selectItem itemValue="SP" itemLabel="São Paulo"></f:selectItem>
+					<f:selectItem itemValue="SE" itemLabel="Sergipe"></f:selectItem>
+					<f:selectItem itemValue="TO" itemLabel="Tocantins"></f:selectItem>
+				</p:selectOneMenu>
+				<br />
+				<p:outputLabel for="local" value="Local" />
+				<p:inputText id="local" value="#{quiosqueBean.selecionado.local}" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{quiosqueBean.salvar}" icon="fa fa-save"
+					update="formList formEdit" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{quiosqueBean.cancelar}" icon="fa fa-close"
+					immediate="true" update="formList formEdit" />
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

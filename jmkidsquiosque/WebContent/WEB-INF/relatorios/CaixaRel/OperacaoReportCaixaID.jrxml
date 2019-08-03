@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OperacaoReportCaixaID" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7acf7126-88ea-42ab-9a24-a0751130c5ea">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JMKidsQuiosque"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="ParCaixaID" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT quiosque.brinquedooperacao.datahoraativacao,
+	quiosque.brinquedooperacao.datahoracancelamento,
+	quiosque.brinquedooperacao.datahoracontratado,
+	quiosque.brinquedooperacao.datahorainativacao,
+	quiosque.brinquedooperacao.justificativacancelamento,
+	quiosque.brinquedooperacao.minutoscontratados,
+	quiosque.brinquedooperacao.minutosdecorridos,
+	quiosque.brinquedooperacao.valorpospago,
+	quiosque.brinquedooperacao.valorprepago,
+	quiosque.brinquedooperacao.valordesconto,
+	quiosque.brinquedooperacao.justificativadesconto,
+	quiosque.brinquedooperacao.caixa_id,
+	br.descricao bri_descricao
+FROM quiosque.brinquedooperacao
+LEFT JOIN nuvem.brinquedo br ON br.id = quiosque.brinquedooperacao.brinquedo_id
+WHERE quiosque.brinquedooperacao.caixa_id =   $P{ParCaixaID} 
+ORDER BY datahoracontratado asc]]>
+	</queryString>
+	<field name="datahoraativacao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahoraativacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="datahoracancelamento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahoracancelamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="datahoracontratado" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahoracontratado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="datahorainativacao" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahorainativacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="justificativacancelamento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="justificativacancelamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="minutoscontratados" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="minutoscontratados"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="minutosdecorridos" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="minutosdecorridos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="valorpospago" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valorpospago"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="valorprepago" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valorprepago"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="valordesconto" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valordesconto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="justificativadesconto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="justificativadesconto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="caixa_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="caixa_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+	</field>
+	<field name="bri_descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bri_descricao"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="23">
+			<staticText>
+				<reportElement x="89" y="2" width="55" height="20" uuid="82f6dcd3-1875-4127-bde3-85f614a08a96">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5d76a2b9-27a5-47a0-b822-1a62170b907c"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contratação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="2" width="55" height="20" uuid="479ee511-7602-41c8-a992-778b725353c7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a45b82f2-fdb6-4737-857f-2811f126727f"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ativação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="2" width="55" height="20" uuid="860b1d06-42b4-4374-b104-8711fd90ae68">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="841ffafd-d7db-4aa8-b44c-3eb7b4a7114d"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inativação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="316" y="2" width="40" height="20" uuid="40f05781-0dd3-4145-a5cb-4dabc65e85b1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5c477eb8-8908-4bd9-b26f-50aa5094b1e4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrato (min)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="2" width="43" height="20" uuid="fd03b3c0-d413-4bda-bae3-c548a07a3f4c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6631c88e-18e5-40f8-a490-48e56e1be8b7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Decorridos (min)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="2" width="48" height="20" uuid="30099698-36ac-45f1-b0ef-fa61d7a46ef3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f351a621-8db6-438a-9cc1-76b7acd73e7b"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pré-Pago (R$)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="2" width="48" height="20" uuid="c78fea19-52b9-418f-a24e-6a9558a83eed">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c7df58d-6305-4f54-ab67-15ead1601c28"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pós-Pago (R$)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="503" y="2" width="50" height="20" uuid="3f07ff12-bb47-4976-b21b-c3d08e748831">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="922cf090-f98e-4b0d-a865-0e9ee189a831"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desconto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="2" width="55" height="20" uuid="b368a9b7-6189-423b-bbc2-dc621c136910">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="841ffafd-d7db-4aa8-b44c-3eb7b4a7114d"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cancelado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="553" height="20" backcolor="#CCCCCC" uuid="57bdc794-c9cc-42f9-b3fd-6f370be20891">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="89" y="0" width="55" height="20" uuid="c06f577e-5b10-4883-93c5-a8a5d9408d7d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5d76a2b9-27a5-47a0-b822-1a62170b907c"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahoracontratado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="146" y="0" width="55" height="20" uuid="ce96e68c-b7ab-4ff6-a5a9-f5d93e966afb">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a45b82f2-fdb6-4737-857f-2811f126727f"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahoraativacao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="203" y="0" width="55" height="20" uuid="16fef11a-d738-48fc-b26a-226992d9e594">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="841ffafd-d7db-4aa8-b44c-3eb7b4a7114d"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahorainativacao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="20" width="553" height="19" isRemoveLineWhenBlank="true" uuid="06e0619f-1563-4d1f-9706-058a467c8de1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f336240-db09-4d49-bdb4-42e3c5f0590d"/>
+					<printWhenExpression><![CDATA[$F{datahoracancelamento} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{justificativacancelamento}+$F{justificativadesconto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="316" y="0" width="40" height="20" uuid="9ed54f74-8e0a-43a9-99fb-3aba49a3a694">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5c477eb8-8908-4bd9-b26f-50aa5094b1e4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{minutoscontratados}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="357" y="0" width="43" height="20" uuid="de6cf574-d182-42b3-9ac8-6baac305f0b0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6631c88e-18e5-40f8-a490-48e56e1be8b7"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{minutosdecorridos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="405" y="0" width="48" height="20" uuid="df2b249f-0c49-42ef-b2cb-e875c8e84f16">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f351a621-8db6-438a-9cc1-76b7acd73e7b"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorprepago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="48" height="20" uuid="3c1c1f3c-ecd3-4491-9abe-2b753b7b12d1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4c7df58d-6305-4f54-ab67-15ead1601c28"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorpospago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="503" y="0" width="50" height="20" uuid="5326b460-2212-4a01-8833-151821a9622a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="922cf090-f98e-4b0d-a865-0e9ee189a831"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valordesconto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="259" y="0" width="55" height="20" uuid="eb223876-f99e-492a-a0d7-01477a331772">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="841ffafd-d7db-4aa8-b44c-3eb7b4a7114d"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahoracancelamento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="0" width="88" height="20" uuid="e0aa1c4e-b205-4324-97db-3da9225aa561">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5d76a2b9-27a5-47a0-b822-1a62170b907c"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bri_descricao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

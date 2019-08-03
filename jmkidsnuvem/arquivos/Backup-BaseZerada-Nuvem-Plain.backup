@@ -1,0 +1,1612 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
+
+-- Started on 2019-06-05 16:12:59
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 9 (class 2615 OID 35756)
+-- Name: nuvem; Type: SCHEMA; Schema: -; Owner: jmkids
+--
+
+CREATE SCHEMA nuvem;
+
+
+ALTER SCHEMA nuvem OWNER TO jmkids;
+
+--
+-- TOC entry 8 (class 2615 OID 35754)
+-- Name: quiosque; Type: SCHEMA; Schema: -; Owner: jmkids
+--
+
+CREATE SCHEMA quiosque;
+
+
+ALTER SCHEMA quiosque OWNER TO jmkids;
+
+--
+-- TOC entry 1 (class 3079 OID 12355)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2327 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 216 (class 1255 OID 36390)
+-- Name: alterou_campo(anyelement, anyelement); Type: FUNCTION; Schema: public; Owner: jmkids
+--
+
+CREATE FUNCTION alterou_campo(anterior anyelement, novo anyelement) RETURNS boolean
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+DECLARE
+   v_aux boolean := false;
+   
+BEGIN
+   if ((anterior is null) and (novo is not null)) then
+      v_aux := true;
+   elseif ((anterior is not null) and (novo is null)) then
+      v_aux := true;
+   elseif ((anterior is not null) and (novo is not null) and (anterior <> novo)) then
+      v_aux := true;
+   end if;
+
+   RETURN v_aux;
+END;
+$$;
+
+
+ALTER FUNCTION public.alterou_campo(anterior anyelement, novo anyelement) OWNER TO jmkids;
+
+--
+-- TOC entry 2328 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: FUNCTION alterou_campo(anterior anyelement, novo anyelement); Type: COMMENT; Schema: public; Owner: jmkids
+--
+
+COMMENT ON FUNCTION alterou_campo(anterior anyelement, novo anyelement) IS 'Retorna true se houve qualquer alteração no campo quanto ao seu valor anterior e o novo valor';
+
+
+--
+-- TOC entry 229 (class 1255 OID 36391)
+-- Name: valores_iguais(anyelement, anyelement); Type: FUNCTION; Schema: public; Owner: jmkids
+--
+
+CREATE FUNCTION valores_iguais(campo1 anyelement, campo2 anyelement) RETURNS boolean
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+DECLARE
+   v_aux boolean := false;
+   
+BEGIN
+   if ((campo1 is null) and (campo2 is null)) then
+      v_aux := true;
+   elseif ((campo1 is not null) and (campo2 is null)) then
+      v_aux := false;
+   elseif ((campo1 is null) and (campo2 is not null)) then
+      v_aux := false;   
+   elseif ((campo1 is not null) and (campo2 is not null) and (campo1 = campo2)) then
+      v_aux := true;
+   else
+      v_aux := false;   
+   end if;
+
+   RETURN v_aux;
+END;
+$$;
+
+
+ALTER FUNCTION public.valores_iguais(campo1 anyelement, campo2 anyelement) OWNER TO jmkids;
+
+--
+-- TOC entry 2329 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: FUNCTION valores_iguais(campo1 anyelement, campo2 anyelement); Type: COMMENT; Schema: public; Owner: jmkids
+--
+
+COMMENT ON FUNCTION valores_iguais(campo1 anyelement, campo2 anyelement) IS 'Retorna true se os campos possuem o mesmo conteúdo ou ambos são null. Se não retorna false.';
+
+
+SET search_path = nuvem, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 183 (class 1259 OID 35758)
+-- Name: brinquedo; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE brinquedo (
+    id bigint NOT NULL,
+    chave character varying(60),
+    dataaquisicao date,
+    datahoradesabilitado timestamp without time zone,
+    descricao character varying(60),
+    foto bytea,
+    inftecnicas text,
+    motivodesabilitado text,
+    tempominimo integer,
+    valoraquisicao double precision,
+    versao integer
+);
+
+
+ALTER TABLE brinquedo OWNER TO jmkids;
+
+--
+-- TOC entry 196 (class 1259 OID 35836)
+-- Name: brinquedoid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE brinquedoid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE brinquedoid OWNER TO jmkids;
+
+--
+-- TOC entry 184 (class 1259 OID 35766)
+-- Name: brinquedonoquiosque; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE brinquedonoquiosque (
+    id bigint NOT NULL,
+    contratado boolean,
+    datahoraativacao timestamp without time zone,
+    datahorainativacao timestamp without time zone,
+    empausa boolean,
+    emuso boolean,
+    versao integer,
+    brinquedo_id bigint,
+    quiosque_id bigint
+);
+
+
+ALTER TABLE brinquedonoquiosque OWNER TO jmkids;
+
+--
+-- TOC entry 197 (class 1259 OID 35838)
+-- Name: brinquedonoquiosqueid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE brinquedonoquiosqueid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE brinquedonoquiosqueid OWNER TO jmkids;
+
+--
+-- TOC entry 185 (class 1259 OID 35771)
+-- Name: configuracao; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE configuracao (
+    id bigint NOT NULL,
+    versao integer
+);
+
+
+ALTER TABLE configuracao OWNER TO jmkids;
+
+--
+-- TOC entry 186 (class 1259 OID 35776)
+-- Name: formapagamento; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE formapagamento (
+    id bigint NOT NULL,
+    descricao character varying(60),
+    versao integer
+);
+
+
+ALTER TABLE formapagamento OWNER TO jmkids;
+
+--
+-- TOC entry 198 (class 1259 OID 35840)
+-- Name: formapagamentoid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE formapagamentoid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE formapagamentoid OWNER TO jmkids;
+
+--
+-- TOC entry 187 (class 1259 OID 35781)
+-- Name: funcionario; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE funcionario (
+    id bigint NOT NULL,
+    bairro character varying(50),
+    cep character varying(10),
+    complemento character varying(50),
+    cpf character varying(14),
+    ctpsnumero character varying(10),
+    ctpsserie character varying(10),
+    dataadmissao date,
+    datademissao date,
+    email character varying(150) NOT NULL,
+    endereco character varying(100),
+    fonedois character varying(20),
+    foneum character varying(20),
+    foto bytea,
+    nome character varying(255),
+    nomecidade character varying(50),
+    numero character varying(20),
+    rg character varying(15),
+    senha character varying(64),
+    ufcidade character varying(20),
+    versao integer
+);
+
+
+ALTER TABLE funcionario OWNER TO jmkids;
+
+--
+-- TOC entry 215 (class 1259 OID 36388)
+-- Name: funcionarioid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE funcionarioid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE funcionarioid OWNER TO jmkids;
+
+--
+-- TOC entry 188 (class 1259 OID 35789)
+-- Name: funcionarioquiosque; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE funcionarioquiosque (
+    id bigint NOT NULL,
+    versao integer,
+    funcionario_id bigint NOT NULL,
+    quiosque_id bigint NOT NULL
+);
+
+
+ALTER TABLE funcionarioquiosque OWNER TO jmkids;
+
+--
+-- TOC entry 199 (class 1259 OID 35844)
+-- Name: funcionarioquiosqueid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE funcionarioquiosqueid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE funcionarioquiosqueid OWNER TO jmkids;
+
+--
+-- TOC entry 189 (class 1259 OID 35794)
+-- Name: grupocliente; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE grupocliente (
+    id bigint NOT NULL,
+    descricao character varying(60),
+    versao integer
+);
+
+
+ALTER TABLE grupocliente OWNER TO jmkids;
+
+--
+-- TOC entry 200 (class 1259 OID 35846)
+-- Name: grupoclienteid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE grupoclienteid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE grupoclienteid OWNER TO jmkids;
+
+--
+-- TOC entry 190 (class 1259 OID 35799)
+-- Name: promocao; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE promocao (
+    id bigint NOT NULL,
+    cnpj character varying(18),
+    cpf character varying(14),
+    datahorafim timestamp without time zone,
+    datahorainicio timestamp without time zone,
+    descricao character varying(60),
+    diadasemana integer,
+    geral boolean,
+    percentualdesconto real,
+    versao integer,
+    grupocliente_id bigint
+);
+
+
+ALTER TABLE promocao OWNER TO jmkids;
+
+--
+-- TOC entry 201 (class 1259 OID 35848)
+-- Name: promocaoid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE promocaoid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE promocaoid OWNER TO jmkids;
+
+--
+-- TOC entry 191 (class 1259 OID 35804)
+-- Name: promocaoquiosque; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE promocaoquiosque (
+    id bigint NOT NULL,
+    versao integer,
+    promocao_id bigint,
+    quiosque_id bigint
+);
+
+
+ALTER TABLE promocaoquiosque OWNER TO jmkids;
+
+--
+-- TOC entry 202 (class 1259 OID 35850)
+-- Name: promocaoquiosqueid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE promocaoquiosqueid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE promocaoquiosqueid OWNER TO jmkids;
+
+--
+-- TOC entry 192 (class 1259 OID 35809)
+-- Name: quiosque; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE quiosque (
+    id bigint NOT NULL,
+    bairro character varying(60),
+    cep character varying(10),
+    chave character varying(60),
+    complemento character varying(80),
+    descricao character varying(60),
+    endereco character varying(100),
+    local character varying(60),
+    nomecidade character varying(60),
+    numero character varying(20),
+    ufcidade character varying(2),
+    versao integer
+);
+
+
+ALTER TABLE quiosque OWNER TO jmkids;
+
+--
+-- TOC entry 203 (class 1259 OID 35852)
+-- Name: quiosqueid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE quiosqueid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE quiosqueid OWNER TO jmkids;
+
+--
+-- TOC entry 193 (class 1259 OID 35817)
+-- Name: tabelapreco; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE tabelapreco (
+    id bigint NOT NULL,
+    datahorafim timestamp without time zone,
+    datahorainicio timestamp without time zone,
+    descricao character varying(60),
+    geral boolean,
+    tempoflexibilizacao integer,
+    valorminutoadicional real,
+    versao integer,
+    quiosque_id bigint
+);
+
+
+ALTER TABLE tabelapreco OWNER TO jmkids;
+
+--
+-- TOC entry 204 (class 1259 OID 35854)
+-- Name: tabelaprecoid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE tabelaprecoid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tabelaprecoid OWNER TO jmkids;
+
+--
+-- TOC entry 194 (class 1259 OID 35822)
+-- Name: tabelaprecotempo; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE tabelaprecotempo (
+    id bigint NOT NULL,
+    minutos integer,
+    valor double precision,
+    versao integer,
+    tabelapreco_id bigint NOT NULL
+);
+
+
+ALTER TABLE tabelaprecotempo OWNER TO jmkids;
+
+--
+-- TOC entry 205 (class 1259 OID 35856)
+-- Name: tabelaprecotempoid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE tabelaprecotempoid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tabelaprecotempoid OWNER TO jmkids;
+
+--
+-- TOC entry 195 (class 1259 OID 35827)
+-- Name: usuario; Type: TABLE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE TABLE usuario (
+    id bigint NOT NULL,
+    login character varying(20) NOT NULL,
+    nome character varying(60) NOT NULL,
+    senha character varying(64) NOT NULL
+);
+
+
+ALTER TABLE usuario OWNER TO jmkids;
+
+--
+-- TOC entry 206 (class 1259 OID 35858)
+-- Name: usuarioid; Type: SEQUENCE; Schema: nuvem; Owner: jmkids
+--
+
+CREATE SEQUENCE usuarioid
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE usuarioid OWNER TO jmkids;
+
+SET search_path = quiosque, pg_catalog;
+
+--
+-- TOC entry 207 (class 1259 OID 35860)
+-- Name: brinquedooperacao; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE brinquedooperacao (
+    id bigint NOT NULL,
+    dadossemcadastro character varying(150),
+    datahoraativacao timestamp without time zone,
+    datahoracancelamento timestamp without time zone,
+    datahoracontratado timestamp without time zone,
+    datahoraempausa timestamp without time zone,
+    datahorainativacao timestamp without time zone,
+    justificativacancelamento character varying(150),
+    justificativacredito character varying(150),
+    justificativadesconto character varying(150),
+    log text,
+    minutoscontratados integer,
+    minutosdecorridos integer,
+    minutosdiferenca integer,
+    tempoempausa integer,
+    tempoflexibilizacao integer,
+    valorcreditoconcedido double precision,
+    valordesconto double precision,
+    valorpospago double precision,
+    valorprepago double precision,
+    versao integer,
+    caixa_id bigint NOT NULL,
+    quiosque_id bigint NOT NULL,
+    brinquedo_id bigint NOT NULL,
+    cliente_cpfoucnpj character varying(20),
+    formapospago_id bigint,
+    formaprepago_id bigint,
+    funcionarioativou_id bigint,
+    funcionariocancelou_id bigint,
+    funcionarioinativou_id bigint,
+    funcionariopausou_id bigint,
+    tabelaprecotempo_id bigint
+);
+
+
+ALTER TABLE brinquedooperacao OWNER TO jmkids;
+
+--
+-- TOC entry 208 (class 1259 OID 35868)
+-- Name: caixa; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE caixa (
+    id bigint NOT NULL,
+    datahoraabertura timestamp without time zone,
+    datahorafechamento timestamp without time zone,
+    observacao text,
+    valorabertura double precision,
+    valorcontagem double precision,
+    valordiferenca double precision,
+    valorfechamento double precision,
+    versao integer,
+    quiosque_id bigint NOT NULL,
+    funcionarioabriu_id bigint,
+    funcionariofechou_id bigint
+);
+
+
+ALTER TABLE caixa OWNER TO jmkids;
+
+--
+-- TOC entry 209 (class 1259 OID 35876)
+-- Name: caixamovimento; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE caixamovimento (
+    id bigint NOT NULL,
+    datahora timestamp without time zone,
+    descricao character varying(100),
+    operacao character varying(30),
+    valor double precision,
+    versao integer,
+    caixa_id bigint NOT NULL,
+    quiosque_id bigint NOT NULL,
+    brinquedooperacao_id bigint NOT NULL,
+    formapagamento_id bigint NOT NULL,
+    funcionario_id bigint
+);
+
+
+ALTER TABLE caixamovimento OWNER TO jmkids;
+
+--
+-- TOC entry 210 (class 1259 OID 35881)
+-- Name: caixamovimentodois; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE caixamovimentodois (
+    id bigint NOT NULL,
+    datahora timestamp without time zone,
+    descricao character varying(100),
+    operacao character varying(30),
+    valor double precision,
+    versao integer,
+    caixa_id bigint NOT NULL,
+    quiosque_id bigint NOT NULL,
+    formapagamento_id bigint NOT NULL,
+    funcionario_id bigint
+);
+
+
+ALTER TABLE caixamovimentodois OWNER TO jmkids;
+
+--
+-- TOC entry 211 (class 1259 OID 35886)
+-- Name: cliente; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE cliente (
+    cpfoucnpj character varying(20) NOT NULL,
+    bairro character varying(50),
+    celular character varying(20),
+    cep character varying(10),
+    complemento character varying(50),
+    datahoramodificado timestamp without time zone,
+    email character varying(120),
+    endereco character varying(120),
+    nascimento date,
+    nome character varying(80),
+    nomecidade character varying(60),
+    numlocacoes integer,
+    numero character varying(20),
+    pfoupj character varying(2),
+    telefonefixo character varying(20),
+    ufcidade character varying(2),
+    versao integer,
+    grupocliente_id bigint
+);
+
+
+ALTER TABLE cliente OWNER TO jmkids;
+
+--
+-- TOC entry 212 (class 1259 OID 35894)
+-- Name: clientequiosque; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE clientequiosque (
+    datahoramodificado timestamp without time zone,
+    cliente_cpfoucnpj character varying(20) NOT NULL,
+    quiosque_id bigint NOT NULL
+);
+
+
+ALTER TABLE clientequiosque OWNER TO jmkids;
+
+--
+-- TOC entry 213 (class 1259 OID 35899)
+-- Name: configuracaoquiosque; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE configuracaoquiosque (
+    id bigint NOT NULL,
+    chavequiosque character varying(60),
+    idquiosque bigint,
+    tempoparasincronizacao integer,
+    urlintegracao character varying(200),
+    versao integer
+);
+
+
+ALTER TABLE configuracaoquiosque OWNER TO jmkids;
+
+--
+-- TOC entry 214 (class 1259 OID 35904)
+-- Name: inativacaoforcada; Type: TABLE; Schema: quiosque; Owner: jmkids
+--
+
+CREATE TABLE inativacaoforcada (
+    id bigint NOT NULL,
+    datahora timestamp without time zone,
+    observacao character varying(150),
+    versao integer,
+    caixa_id bigint NOT NULL,
+    quiosque_id bigint NOT NULL,
+    brinquedooperacao_id bigint NOT NULL,
+    funcionario_id bigint
+);
+
+
+ALTER TABLE inativacaoforcada OWNER TO jmkids;
+
+SET search_path = nuvem, pg_catalog;
+
+--
+-- TOC entry 2287 (class 0 OID 35758)
+-- Dependencies: 183
+-- Data for Name: brinquedo; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY brinquedo (id, chave, dataaquisicao, datahoradesabilitado, descricao, foto, inftecnicas, motivodesabilitado, tempominimo, valoraquisicao, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2330 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: brinquedoid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('brinquedoid', 1, false);
+
+
+--
+-- TOC entry 2288 (class 0 OID 35766)
+-- Dependencies: 184
+-- Data for Name: brinquedonoquiosque; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY brinquedonoquiosque (id, contratado, datahoraativacao, datahorainativacao, empausa, emuso, versao, brinquedo_id, quiosque_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2331 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: brinquedonoquiosqueid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('brinquedonoquiosqueid', 1, false);
+
+
+--
+-- TOC entry 2289 (class 0 OID 35771)
+-- Dependencies: 185
+-- Data for Name: configuracao; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY configuracao (id, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2290 (class 0 OID 35776)
+-- Dependencies: 186
+-- Data for Name: formapagamento; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY formapagamento (id, descricao, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2332 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: formapagamentoid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('formapagamentoid', 1, false);
+
+
+--
+-- TOC entry 2291 (class 0 OID 35781)
+-- Dependencies: 187
+-- Data for Name: funcionario; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY funcionario (id, bairro, cep, complemento, cpf, ctpsnumero, ctpsserie, dataadmissao, datademissao, email, endereco, fonedois, foneum, foto, nome, nomecidade, numero, rg, senha, ufcidade, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2333 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: funcionarioid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('funcionarioid', 1, false);
+
+
+--
+-- TOC entry 2292 (class 0 OID 35789)
+-- Dependencies: 188
+-- Data for Name: funcionarioquiosque; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY funcionarioquiosque (id, versao, funcionario_id, quiosque_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2334 (class 0 OID 0)
+-- Dependencies: 199
+-- Name: funcionarioquiosqueid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('funcionarioquiosqueid', 1, false);
+
+
+--
+-- TOC entry 2293 (class 0 OID 35794)
+-- Dependencies: 189
+-- Data for Name: grupocliente; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY grupocliente (id, descricao, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2335 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: grupoclienteid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('grupoclienteid', 1, false);
+
+
+--
+-- TOC entry 2294 (class 0 OID 35799)
+-- Dependencies: 190
+-- Data for Name: promocao; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY promocao (id, cnpj, cpf, datahorafim, datahorainicio, descricao, diadasemana, geral, percentualdesconto, versao, grupocliente_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2336 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: promocaoid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('promocaoid', 1, false);
+
+
+--
+-- TOC entry 2295 (class 0 OID 35804)
+-- Dependencies: 191
+-- Data for Name: promocaoquiosque; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY promocaoquiosque (id, versao, promocao_id, quiosque_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2337 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: promocaoquiosqueid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('promocaoquiosqueid', 1, false);
+
+
+--
+-- TOC entry 2296 (class 0 OID 35809)
+-- Dependencies: 192
+-- Data for Name: quiosque; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY quiosque (id, bairro, cep, chave, complemento, descricao, endereco, local, nomecidade, numero, ufcidade, versao) FROM stdin;
+1			\N		Quiosque um		Local Teste			RS	0
+\.
+
+
+--
+-- TOC entry 2338 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: quiosqueid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('quiosqueid', 1, true);
+
+
+--
+-- TOC entry 2297 (class 0 OID 35817)
+-- Dependencies: 193
+-- Data for Name: tabelapreco; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY tabelapreco (id, datahorafim, datahorainicio, descricao, geral, tempoflexibilizacao, valorminutoadicional, versao, quiosque_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2339 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: tabelaprecoid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('tabelaprecoid', 1, false);
+
+
+--
+-- TOC entry 2298 (class 0 OID 35822)
+-- Dependencies: 194
+-- Data for Name: tabelaprecotempo; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY tabelaprecotempo (id, minutos, valor, versao, tabelapreco_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2340 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: tabelaprecotempoid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('tabelaprecotempoid', 1, false);
+
+
+--
+-- TOC entry 2299 (class 0 OID 35827)
+-- Dependencies: 195
+-- Data for Name: usuario; Type: TABLE DATA; Schema: nuvem; Owner: jmkids
+--
+
+COPY usuario (id, login, nome, senha) FROM stdin;
+1	sysadmin	SysAdmin	fabsoftpwd
+\.
+
+
+--
+-- TOC entry 2341 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: usuarioid; Type: SEQUENCE SET; Schema: nuvem; Owner: jmkids
+--
+
+SELECT pg_catalog.setval('usuarioid', 1, true);
+
+
+SET search_path = quiosque, pg_catalog;
+
+--
+-- TOC entry 2311 (class 0 OID 35860)
+-- Dependencies: 207
+-- Data for Name: brinquedooperacao; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY brinquedooperacao (id, dadossemcadastro, datahoraativacao, datahoracancelamento, datahoracontratado, datahoraempausa, datahorainativacao, justificativacancelamento, justificativacredito, justificativadesconto, log, minutoscontratados, minutosdecorridos, minutosdiferenca, tempoempausa, tempoflexibilizacao, valorcreditoconcedido, valordesconto, valorpospago, valorprepago, versao, caixa_id, quiosque_id, brinquedo_id, cliente_cpfoucnpj, formapospago_id, formaprepago_id, funcionarioativou_id, funcionariocancelou_id, funcionarioinativou_id, funcionariopausou_id, tabelaprecotempo_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2312 (class 0 OID 35868)
+-- Dependencies: 208
+-- Data for Name: caixa; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY caixa (id, datahoraabertura, datahorafechamento, observacao, valorabertura, valorcontagem, valordiferenca, valorfechamento, versao, quiosque_id, funcionarioabriu_id, funcionariofechou_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2313 (class 0 OID 35876)
+-- Dependencies: 209
+-- Data for Name: caixamovimento; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY caixamovimento (id, datahora, descricao, operacao, valor, versao, caixa_id, quiosque_id, brinquedooperacao_id, formapagamento_id, funcionario_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2314 (class 0 OID 35881)
+-- Dependencies: 210
+-- Data for Name: caixamovimentodois; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY caixamovimentodois (id, datahora, descricao, operacao, valor, versao, caixa_id, quiosque_id, formapagamento_id, funcionario_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2315 (class 0 OID 35886)
+-- Dependencies: 211
+-- Data for Name: cliente; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY cliente (cpfoucnpj, bairro, celular, cep, complemento, datahoramodificado, email, endereco, nascimento, nome, nomecidade, numlocacoes, numero, pfoupj, telefonefixo, ufcidade, versao, grupocliente_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2316 (class 0 OID 35894)
+-- Dependencies: 212
+-- Data for Name: clientequiosque; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY clientequiosque (datahoramodificado, cliente_cpfoucnpj, quiosque_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2317 (class 0 OID 35899)
+-- Dependencies: 213
+-- Data for Name: configuracaoquiosque; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY configuracaoquiosque (id, chavequiosque, idquiosque, tempoparasincronizacao, urlintegracao, versao) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2318 (class 0 OID 35904)
+-- Dependencies: 214
+-- Data for Name: inativacaoforcada; Type: TABLE DATA; Schema: quiosque; Owner: jmkids
+--
+
+COPY inativacaoforcada (id, datahora, observacao, versao, caixa_id, quiosque_id, brinquedooperacao_id, funcionario_id) FROM stdin;
+\.
+
+
+SET search_path = nuvem, pg_catalog;
+
+--
+-- TOC entry 2094 (class 2606 OID 35765)
+-- Name: brinquedo_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedo
+    ADD CONSTRAINT brinquedo_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2096 (class 2606 OID 35770)
+-- Name: brinquedonoquiosque_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedonoquiosque
+    ADD CONSTRAINT brinquedonoquiosque_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2098 (class 2606 OID 35775)
+-- Name: configuracao_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY configuracao
+    ADD CONSTRAINT configuracao_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2100 (class 2606 OID 35780)
+-- Name: formapagamento_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY formapagamento
+    ADD CONSTRAINT formapagamento_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2102 (class 2606 OID 35788)
+-- Name: funcionario_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionario
+    ADD CONSTRAINT funcionario_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2108 (class 2606 OID 35793)
+-- Name: funcionarioquiosque_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionarioquiosque
+    ADD CONSTRAINT funcionarioquiosque_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2110 (class 2606 OID 35798)
+-- Name: grupocliente_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY grupocliente
+    ADD CONSTRAINT grupocliente_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2112 (class 2606 OID 35803)
+-- Name: promocao_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY promocao
+    ADD CONSTRAINT promocao_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2114 (class 2606 OID 35808)
+-- Name: promocaoquiosque_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY promocaoquiosque
+    ADD CONSTRAINT promocaoquiosque_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2116 (class 2606 OID 35816)
+-- Name: quiosque_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY quiosque
+    ADD CONSTRAINT quiosque_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2118 (class 2606 OID 35821)
+-- Name: tabelapreco_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY tabelapreco
+    ADD CONSTRAINT tabelapreco_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2120 (class 2606 OID 35826)
+-- Name: tabelaprecotempo_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY tabelaprecotempo
+    ADD CONSTRAINT tabelaprecotempo_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2104 (class 2606 OID 35835)
+-- Name: uk_hujfe9giwd0dwuktb8toq7op7; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionario
+    ADD CONSTRAINT uk_hujfe9giwd0dwuktb8toq7op7 UNIQUE (email);
+
+
+--
+-- TOC entry 2106 (class 2606 OID 35833)
+-- Name: uk_iq7jks9kmtnmm74tjfp3b80ha; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionario
+    ADD CONSTRAINT uk_iq7jks9kmtnmm74tjfp3b80ha UNIQUE (cpf);
+
+
+--
+-- TOC entry 2122 (class 2606 OID 35831)
+-- Name: usuario_pkey; Type: CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT usuario_pkey PRIMARY KEY (id);
+
+
+SET search_path = quiosque, pg_catalog;
+
+--
+-- TOC entry 2124 (class 2606 OID 35867)
+-- Name: brinquedooperacao_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT brinquedooperacao_pkey PRIMARY KEY (caixa_id, quiosque_id, id);
+
+
+--
+-- TOC entry 2126 (class 2606 OID 35875)
+-- Name: caixa_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixa
+    ADD CONSTRAINT caixa_pkey PRIMARY KEY (id, quiosque_id);
+
+
+--
+-- TOC entry 2128 (class 2606 OID 35880)
+-- Name: caixamovimento_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimento
+    ADD CONSTRAINT caixamovimento_pkey PRIMARY KEY (caixa_id, quiosque_id, brinquedooperacao_id, id);
+
+
+--
+-- TOC entry 2130 (class 2606 OID 35885)
+-- Name: caixamovimentodois_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimentodois
+    ADD CONSTRAINT caixamovimentodois_pkey PRIMARY KEY (caixa_id, quiosque_id, id);
+
+
+--
+-- TOC entry 2132 (class 2606 OID 35893)
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY cliente
+    ADD CONSTRAINT cliente_pkey PRIMARY KEY (cpfoucnpj);
+
+
+--
+-- TOC entry 2134 (class 2606 OID 35898)
+-- Name: clientequiosque_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY clientequiosque
+    ADD CONSTRAINT clientequiosque_pkey PRIMARY KEY (cliente_cpfoucnpj, quiosque_id);
+
+
+--
+-- TOC entry 2136 (class 2606 OID 35903)
+-- Name: configuracaoquiosque_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY configuracaoquiosque
+    ADD CONSTRAINT configuracaoquiosque_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2138 (class 2606 OID 35908)
+-- Name: inativacaoforcada_pkey; Type: CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY inativacaoforcada
+    ADD CONSTRAINT inativacaoforcada_pkey PRIMARY KEY (caixa_id, quiosque_id, brinquedooperacao_id, id);
+
+
+SET search_path = nuvem, pg_catalog;
+
+--
+-- TOC entry 2144 (class 2606 OID 35934)
+-- Name: fk49xq4ems28swmg4vvn8qw2hgk; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY promocaoquiosque
+    ADD CONSTRAINT fk49xq4ems28swmg4vvn8qw2hgk FOREIGN KEY (promocao_id) REFERENCES promocao(id);
+
+
+--
+-- TOC entry 2140 (class 2606 OID 35914)
+-- Name: fk74222r5njmav1g2p3kibypk5a; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedonoquiosque
+    ADD CONSTRAINT fk74222r5njmav1g2p3kibypk5a FOREIGN KEY (quiosque_id) REFERENCES quiosque(id);
+
+
+--
+-- TOC entry 2147 (class 2606 OID 35949)
+-- Name: fk8fifhajkjcliqit32f4l3ngrx; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY tabelaprecotempo
+    ADD CONSTRAINT fk8fifhajkjcliqit32f4l3ngrx FOREIGN KEY (tabelapreco_id) REFERENCES tabelapreco(id);
+
+
+--
+-- TOC entry 2141 (class 2606 OID 35919)
+-- Name: fkcw26ykdol8d5kptnti4q8i7ye; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionarioquiosque
+    ADD CONSTRAINT fkcw26ykdol8d5kptnti4q8i7ye FOREIGN KEY (funcionario_id) REFERENCES funcionario(id);
+
+
+--
+-- TOC entry 2142 (class 2606 OID 35924)
+-- Name: fkd97iam0ont9m3gpawfbeu1tjx; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY funcionarioquiosque
+    ADD CONSTRAINT fkd97iam0ont9m3gpawfbeu1tjx FOREIGN KEY (quiosque_id) REFERENCES quiosque(id);
+
+
+--
+-- TOC entry 2146 (class 2606 OID 35944)
+-- Name: fkemxr7twvvh524ebfp9pls6u81; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY tabelapreco
+    ADD CONSTRAINT fkemxr7twvvh524ebfp9pls6u81 FOREIGN KEY (quiosque_id) REFERENCES quiosque(id);
+
+
+--
+-- TOC entry 2139 (class 2606 OID 35909)
+-- Name: fkh06fkybmoxn64ph3o7mopfuar; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedonoquiosque
+    ADD CONSTRAINT fkh06fkybmoxn64ph3o7mopfuar FOREIGN KEY (brinquedo_id) REFERENCES brinquedo(id);
+
+
+--
+-- TOC entry 2143 (class 2606 OID 35929)
+-- Name: fkn9sj9iulobo73f3eikyy5n48x; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY promocao
+    ADD CONSTRAINT fkn9sj9iulobo73f3eikyy5n48x FOREIGN KEY (grupocliente_id) REFERENCES grupocliente(id);
+
+
+--
+-- TOC entry 2145 (class 2606 OID 35939)
+-- Name: fkslbjr53o5rkmdake5pvjrmq9g; Type: FK CONSTRAINT; Schema: nuvem; Owner: jmkids
+--
+
+ALTER TABLE ONLY promocaoquiosque
+    ADD CONSTRAINT fkslbjr53o5rkmdake5pvjrmq9g FOREIGN KEY (quiosque_id) REFERENCES quiosque(id);
+
+
+SET search_path = quiosque, pg_catalog;
+
+--
+-- TOC entry 2168 (class 2606 OID 36054)
+-- Name: fk12d4ihpbtjpf72lsqxgskco0l; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY cliente
+    ADD CONSTRAINT fk12d4ihpbtjpf72lsqxgskco0l FOREIGN KEY (grupocliente_id) REFERENCES nuvem.grupocliente(id);
+
+
+--
+-- TOC entry 2149 (class 2606 OID 35959)
+-- Name: fk2n4se5i0onb5dul9v5bf98s73; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fk2n4se5i0onb5dul9v5bf98s73 FOREIGN KEY (brinquedo_id) REFERENCES nuvem.brinquedo(id);
+
+
+--
+-- TOC entry 2153 (class 2606 OID 35979)
+-- Name: fk3k3up0bda0c3aa2kfucrho2i; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fk3k3up0bda0c3aa2kfucrho2i FOREIGN KEY (funcionarioativou_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2158 (class 2606 OID 36004)
+-- Name: fk3qlh3shml9xfbww6a0xdgw20w; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixa
+    ADD CONSTRAINT fk3qlh3shml9xfbww6a0xdgw20w FOREIGN KEY (quiosque_id) REFERENCES nuvem.quiosque(id);
+
+
+--
+-- TOC entry 2164 (class 2606 OID 36034)
+-- Name: fk61is3sg9g2k65jrhvt5um25cj; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimento
+    ADD CONSTRAINT fk61is3sg9g2k65jrhvt5um25cj FOREIGN KEY (funcionario_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2150 (class 2606 OID 35964)
+-- Name: fk79jxrnd6sod7dbyp6m0rc1ujt; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fk79jxrnd6sod7dbyp6m0rc1ujt FOREIGN KEY (cliente_cpfoucnpj) REFERENCES cliente(cpfoucnpj);
+
+
+--
+-- TOC entry 2148 (class 2606 OID 35954)
+-- Name: fk8pde40tjdsryxoi41mlit0unv; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fk8pde40tjdsryxoi41mlit0unv FOREIGN KEY (caixa_id, quiosque_id) REFERENCES caixa(id, quiosque_id);
+
+
+--
+-- TOC entry 2152 (class 2606 OID 35974)
+-- Name: fkaqcqql0sxeq5to2b17n08betb; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkaqcqql0sxeq5to2b17n08betb FOREIGN KEY (formaprepago_id) REFERENCES nuvem.formapagamento(id);
+
+
+--
+-- TOC entry 2160 (class 2606 OID 36014)
+-- Name: fkbabr3aj8pulj3fwuyriky9i2d; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixa
+    ADD CONSTRAINT fkbabr3aj8pulj3fwuyriky9i2d FOREIGN KEY (funcionariofechou_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2156 (class 2606 OID 35994)
+-- Name: fkcsiopidp84wd32ji01tljxb6v; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkcsiopidp84wd32ji01tljxb6v FOREIGN KEY (funcionariopausou_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2162 (class 2606 OID 36024)
+-- Name: fke26683ni2d0t8emqm5uq5iwbg; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimento
+    ADD CONSTRAINT fke26683ni2d0t8emqm5uq5iwbg FOREIGN KEY (caixa_id, quiosque_id) REFERENCES caixa(id, quiosque_id);
+
+
+--
+-- TOC entry 2154 (class 2606 OID 35984)
+-- Name: fkeclag9y5jm8ccw29sgdqrw2m2; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkeclag9y5jm8ccw29sgdqrw2m2 FOREIGN KEY (funcionariocancelou_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2161 (class 2606 OID 36019)
+-- Name: fkevptr74ejxikvrfpsfinc1j5; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimento
+    ADD CONSTRAINT fkevptr74ejxikvrfpsfinc1j5 FOREIGN KEY (caixa_id, quiosque_id, brinquedooperacao_id) REFERENCES brinquedooperacao(caixa_id, quiosque_id, id);
+
+
+--
+-- TOC entry 2166 (class 2606 OID 36044)
+-- Name: fkfmmc1oh6qetjhqle3rejcgn4n; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimentodois
+    ADD CONSTRAINT fkfmmc1oh6qetjhqle3rejcgn4n FOREIGN KEY (formapagamento_id) REFERENCES nuvem.formapagamento(id);
+
+
+--
+-- TOC entry 2169 (class 2606 OID 36059)
+-- Name: fkggbl2imcv31bsw3o8f5t6n6rp; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY clientequiosque
+    ADD CONSTRAINT fkggbl2imcv31bsw3o8f5t6n6rp FOREIGN KEY (cliente_cpfoucnpj) REFERENCES cliente(cpfoucnpj);
+
+
+--
+-- TOC entry 2163 (class 2606 OID 36029)
+-- Name: fki1wm4gh6q5ouyh8d9hrgqk4cd; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimento
+    ADD CONSTRAINT fki1wm4gh6q5ouyh8d9hrgqk4cd FOREIGN KEY (formapagamento_id) REFERENCES nuvem.formapagamento(id);
+
+
+--
+-- TOC entry 2157 (class 2606 OID 35999)
+-- Name: fkjrqh97ttpsh3aw4r6u230j07n; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkjrqh97ttpsh3aw4r6u230j07n FOREIGN KEY (tabelaprecotempo_id) REFERENCES nuvem.tabelaprecotempo(id);
+
+
+--
+-- TOC entry 2155 (class 2606 OID 35989)
+-- Name: fkk99p7v155mpk3f8m4km6rljpw; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkk99p7v155mpk3f8m4km6rljpw FOREIGN KEY (funcionarioinativou_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2159 (class 2606 OID 36009)
+-- Name: fklfv8dast8d8rlrbcm7xu2at5x; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixa
+    ADD CONSTRAINT fklfv8dast8d8rlrbcm7xu2at5x FOREIGN KEY (funcionarioabriu_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2167 (class 2606 OID 36049)
+-- Name: fkm4j8m4e0ybjgvowgya9f4yq8b; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimentodois
+    ADD CONSTRAINT fkm4j8m4e0ybjgvowgya9f4yq8b FOREIGN KEY (funcionario_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2165 (class 2606 OID 36039)
+-- Name: fkoh3lu6a17uqkmhdn765ccva5s; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY caixamovimentodois
+    ADD CONSTRAINT fkoh3lu6a17uqkmhdn765ccva5s FOREIGN KEY (caixa_id, quiosque_id) REFERENCES caixa(id, quiosque_id);
+
+
+--
+-- TOC entry 2151 (class 2606 OID 35969)
+-- Name: fkpfm0tt1cm6dynmhjjpite6t56; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY brinquedooperacao
+    ADD CONSTRAINT fkpfm0tt1cm6dynmhjjpite6t56 FOREIGN KEY (formapospago_id) REFERENCES nuvem.formapagamento(id);
+
+
+--
+-- TOC entry 2170 (class 2606 OID 36064)
+-- Name: fkqr3wn12i939el013s1692hwfx; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY clientequiosque
+    ADD CONSTRAINT fkqr3wn12i939el013s1692hwfx FOREIGN KEY (quiosque_id) REFERENCES nuvem.quiosque(id);
+
+
+--
+-- TOC entry 2171 (class 2606 OID 36069)
+-- Name: fkt1rxmvuia4cqejcowr4nuw7wo; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY inativacaoforcada
+    ADD CONSTRAINT fkt1rxmvuia4cqejcowr4nuw7wo FOREIGN KEY (caixa_id, quiosque_id, brinquedooperacao_id) REFERENCES brinquedooperacao(caixa_id, quiosque_id, id);
+
+
+--
+-- TOC entry 2172 (class 2606 OID 36074)
+-- Name: fktkrvo73n7bu0gh56di2esddsq; Type: FK CONSTRAINT; Schema: quiosque; Owner: jmkids
+--
+
+ALTER TABLE ONLY inativacaoforcada
+    ADD CONSTRAINT fktkrvo73n7bu0gh56di2esddsq FOREIGN KEY (funcionario_id) REFERENCES nuvem.funcionario(id);
+
+
+--
+-- TOC entry 2326 (class 0 OID 0)
+-- Dependencies: 7
+-- Name: public; Type: ACL; Schema: -; Owner: jmkids
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM jmkids;
+GRANT ALL ON SCHEMA public TO jmkids;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2019-06-05 16:12:59
+
+--
+-- PostgreSQL database dump complete
+--
+

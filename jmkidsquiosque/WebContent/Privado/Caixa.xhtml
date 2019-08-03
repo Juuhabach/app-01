@@ -1,0 +1,373 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body onload="#{caixaBean.onLoad()}">
+	<p:growl id="mensagens" />
+	
+	
+	
+	
+	<h:form id="form">
+		<p:fieldset legend="Histórico de Caixas">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+				
+				<p:outputLabel for="flag" value="Filtro de Caixas" />
+				<p:selectOneMenu id="flag" value="#{caixaBean.flag}"
+					placeholder="Selecione uma opção abaixo">
+					<f:selectItem itemLabel="Caixas Abertos" itemValue="Abertos" />
+					<f:selectItem itemLabel="Caixas Fechados" itemValue="Fechados" />
+					<f:selectItem itemLabel="Todos" itemValue="Todos" />
+					<p:ajax listener="#{caixaBean.carregarListas}" update="form"></p:ajax>
+				</p:selectOneMenu>
+				
+				<p:dataTable id="table" emptyMessage="Nenhum caixa no histórico."
+					var="obj" value="#{caixaBean.lista}" selectionMode="single"
+					selection="#{caixaBean.selecionado}" rowKey="#{obj.id}" rows="5"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas.">
+					<p:ajax event="rowSelect" update="form" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Abertura">
+						<h:outputText value="#{obj.dataHoraAbertura}" />
+					</p:column>
+					<p:column headerText="Valor Abertura"  style="text-align:right;">
+						<h:outputText value="#{obj.valorAbertura}">
+							<f:convertNumber pattern="#,##0.00"></f:convertNumber> 
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Fechamento">
+						<h:outputText value="#{obj.dataHoraFechamento}" />
+					</p:column>
+					<p:column headerText="Valor Fechamento"  style="text-align:right;">
+						<h:outputText value="#{obj.valorFechamento}">
+							<f:convertNumber pattern="#,##0.00"></f:convertNumber>
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+				<p:row>
+					<center>
+						<p:commandButton value="Abrir Novo Caixa" update="mensagens formAbrir"
+							actionListener="#{caixaBean.abrirCaixa}" icon="fa fa-circle-o"
+							disabled="#{caixaBean.caixaAbertosQtd > 0}"
+							onclick="PF('dlgAbrir').show();" />
+						<p:commandButton value="Fechar Caixa Selecionado" update="mensagens formFechar"
+							actionListener="#{caixaBean.fecharCaixa}" icon="fa fa-circle"
+							disabled="#{caixaBean.selecionado == null || caixaBean.selecionado.dataHoraFechamento != null}"
+							oncomplete="if (!args.validationFailed){ PF('dlgFechar').show();}" />
+						<p:commandButton value="Excluir Caixa Selecionado" update="mensagens form"
+							actionListener="#{caixaBean.excluirCaixa}" icon="fa fa-trash"
+							disabled="#{caixaBean.selecionado == null || caixaBean.caixaMovimentosQtd > 0 || caixaBean.selecionado.dataHoraFechamento != null}"
+							onclick="return confirm('Excluir?');" />
+						<p:commandButton value="Movimentos no Caixa" 
+							actionListener="#{caixaBean.verMovimentos}" icon="fa fa-list-alt"
+							disabled="#{caixaBean.selecionado == null}" update="mensagens formMovimentos"
+							onclick="PF('dlgVerMovimentos').show();" />
+						<p:commandButton value="Relatório Caixa" 
+							icon="fa fa-print"
+							disabled="#{caixaBean.selecionado == null}" update="mensagens formRelCaixa"
+							onclick="PF('dlgRelCaixa').show();" />			
+	
+					</center>
+				</p:row>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	
+	
+	
+	
+	
+	
+	<p:dialog widgetVar="dlgAbrir" closable="true" modal="true" height="400" width="600">
+		<h:form id="formAbrir">
+			
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:focus for="valorAbertura" />
+				<p:outputLabel for="codigo" value="Código" />
+				<p:inputNumber id="codigo" value="#{caixaBean.selecionado.id}"
+					disabled="false" decimalPlaces="0" immediate="true" />
+				
+				<p:outputLabel for="abertura" value="Abertura" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true" id="abertura"
+					disabled="true" value="#{caixaBean.selecionado.dataHoraAbertura}" />
+
+				<p:outputLabel for="valorAbertura" value="Valor de Abertura" />
+				<p:inputNumber id="valorAbertura" symbol="R$ "
+					value="#{caixaBean.selecionado.valorAbertura}" decimalPlaces="2" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Abrir" icon="fa fa-save"
+					actionListener="#{caixaBean.abrirCaixaGravar}"
+					onclick="PF('dlgAbrir').hide();" update="form" />
+				<p:commandButton value="Cancelar" icon="fa fa-close"
+					actionListener="#{caixaBean.abrirCaixaCancelar}"
+					onclick="PF('dlgAbrir').hide();" update="form" />
+			</center>
+		</h:form>			
+	</p:dialog>
+	
+
+
+
+
+
+
+	
+	<p:dialog widgetVar="dlgFechar" closable="true" modal="true" height="570" width="600">
+		<h:form id="formFechar">
+			
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 5px;">
+				<p:focus for="valorContagem" />
+				
+				<p:outputLabel for="abertura" value="Abertura" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true" id="abertura"
+					showOn="false" readonlyInput="true" inputStyle="background-color: silver"
+					value="#{caixaBean.selecionado.dataHoraAbertura}" />
+
+				<p:outputLabel for="fechamento" value="Fechamento" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true" id="fechamento"
+					showOn="false" readonlyInput="true" inputStyle="background-color: silver"
+					value="#{caixaBean.selecionado.dataHoraFechamento}" />
+
+				<p:outputLabel for="valorAbertura" value="Valor de Abertura" />
+				<p:inputNumber id="valorAbertura" symbol="R$ " readonly="true"
+					inputStyle="background-color: silver"
+					value="#{caixaBean.selecionado.valorAbertura}" decimalPlaces="2" />
+
+				<p:outputLabel for="valorFechamento" value="Valor de Fechamento" />
+				<p:inputNumber id="valorFechamento" symbol="R$ " readonly="true"
+				    inputStyle="background-color: silver"
+					value="#{caixaBean.selecionado.valorFechamento}" decimalPlaces="2" />
+
+				<p:outputLabel for="valorContagem" value="Valor de Contagem" />
+				<p:inputNumber id="valorContagem" symbol="R$ "
+					value="#{caixaBean.selecionado.valorContagem}" decimalPlaces="2">
+					<p:ajax update="diferenca"></p:ajax>
+				</p:inputNumber>
+
+				<p:outputLabel for="diferenca" value="Diferença entre caixas" />
+				<p:inputNumber id="diferenca" symbol="R$ " decimalPlaces="2" readonly="true" 
+				    inputStyle="background-color: silver"
+				    value="#{caixaBean.selecionado.valorDiferenca}" 
+				 />
+
+				<p:outputLabel for="obs" value="Observações" />
+				<p:inputTextarea maxlength="255" id="obs"
+				    value="#{caixaBean.selecionado.observacao}" 
+					counterTemplate="{0} characters remaining" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Fechar" icon="fa fa-cart-arrow-down"
+				    disabled="#{!caixaBean.podeFecharCaixa}"
+					actionListener="#{caixaBean.fecharCaixaGravar}"
+					onclick="if (!args.validationFailed){ PF('dlgFechar').hide();}" update="form" />
+				<p:commandButton value="Cancelar" icon="fa fa-close"
+					actionListener="#{caixaBean.fecharCaixaCancelar}"
+					onclick="PF('dlgFechar').hide();" update="form" />
+			</center>
+		</h:form>
+	</p:dialog>
+	
+
+
+
+
+	<p:dialog widgetVar="dlgVerMovimentos" closable="true" modal="true" height="600" width="1000">
+		<h:form id="formMovimentos">
+			
+
+		<p:dataTable var="m" value="#{caixaBean.movimentos}" id="tabMov"
+					paginator="true" rows="10" paginatorPosition="top"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros."
+		>
+		    <p:column headerText="Data e hora" width="150">
+		        <h:outputText value="#{m.dataHora}">
+		           <f:convertDateTime  pattern="dd/MM/yyyy HH:mm" />
+		        </h:outputText>
+		    </p:column>
+		    
+		    <p:column headerText="Operação" width="90">
+		        <h:outputText value="#{m.operacao}" />
+		    </p:column>
+		 
+		    <p:column headerText="Valor" width="90" style="text-align:right;">
+		        <h:outputText value="#{m.valor}">
+		           <f:convertNumber pattern="#,##0.00"></f:convertNumber> 
+		        </h:outputText> 
+		    </p:column>
+		 
+		    <p:column headerText="Descriçao">
+		        <h:outputText value="#{m.descricao}" />
+		    </p:column>
+		</p:dataTable>
+		
+		<p:dataTable var="m" value="#{caixaBean.movimentosDois}" id="tabMovDois" rowIndexVar="rowIndex"
+					paginator="true" rows="5" paginatorPosition="top"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros."
+		>
+		    <p:column headerText="Data e hora" width="150">
+		        <h:outputText value="#{m.dataHora}">
+		           <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+		        </h:outputText>
+		    </p:column>
+		    
+		    <p:column headerText="Operação" width="90">
+		        <h:outputText value="#{m.operacao}" />
+		    </p:column>
+		 
+		    <p:column headerText="Valor" width="90" style="text-align:right;">
+		       <h:outputText value="#{m.valor}">
+		           <f:convertNumber pattern="#,##0.00"></f:convertNumber> 
+		        </h:outputText>
+		    </p:column>
+		 
+		    <p:column headerText="Descriçao" width="410">
+		        <h:outputText value="#{m.descricao}" />
+		    </p:column>
+		     <p:column headerText="">
+		        <p:commandButton value="Excluir" disabled="#{caixaBean.selecionado.dataHoraFechamento != null}"
+							onclick="PF('dlgExcluir').show()"
+							actionListener="#{caixaBean.excluirMovimento(rowIndex)}"
+							icon="fa fa-trash" />
+		    </p:column>
+		    					
+		</p:dataTable>		
+
+			<br />
+			<center>
+			    <p:commandButton value="Incluir Movimento" icon="fa fa-save"
+			        disabled="#{caixaBean.selecionado.dataHoraFechamento != null}"
+			        actionListener="#{caixaBean.incluirMovimento}"
+					onclick="PF('dlgNovoMovimento').show();" update="formNovoMovimento" />
+				<p:commandButton value="Fechar" icon="fa fa-close"
+					onclick="PF('dlgVerMovimentos').hide();" update="form" />
+			</center>
+		</h:form>
+	</p:dialog> 
+
+
+
+	<p:dialog widgetVar="dlgNovoMovimento" closable="true" modal="true" height="450" width="700">
+	    <p:growl id="msgNovoMov"></p:growl>
+		<h:form id="formNovoMovimento">
+			
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:focus for="data" />
+ 
+				<p:outputLabel for="data" value="Data e hora" />
+				<p:calendar pattern="dd/MM/yyyy HH:mm" mask="true" id="data"
+					disabled="true" value="#{caixaBean.caixaMovimentoDois.dataHora}" />
+				
+				
+				<p:outputLabel for="valor" value="Valor" />
+				<p:inputNumber id="valor" symbol="R$ "
+					value="#{caixaBean.caixaMovimentoDois.valor}" decimalPlaces="2" />
+				
+					
+				<p:outputLabel value="Forma Pagamento" for="formaPagto" />
+				<p:autoComplete id="formaPagto" dropdown="true" required="true"
+					multiple="false" forceSelection="true" var="obj"
+					 itemLabel="#{obj.descricao}"
+					itemValue="#{obj}"
+					value="#{caixaBean.caixaMovimentoDois.formaPagamento}"
+					converter="formaPagamentoConverter"
+					completeMethod="#{brinquedoOperacaoBean.completeFormaPagamento}" />					
+				
+				<p:outputLabel value="Operação" for="operacao" />
+				<p:selectOneMenu value="#{caixaBean.caixaMovimentoDois.operacao}" id="operacao">
+				   <f:selectItem itemValue="Entrada" itemLabel="Entrada"></f:selectItem>
+				   <f:selectItem itemValue="Saida" itemLabel="Saida"></f:selectItem>
+				</p:selectOneMenu>	
+				
+				<p:outputLabel value="Descrição" for="descricao" />
+				<p:inputText id="descricao" value="#{caixaBean.caixaMovimentoDois.descricao}"></p:inputText>
+				
+					
+					
+					
+			</p:panelGrid>
+
+
+
+			<br />
+			<center>
+				<p:commandButton value="Salvar" icon="fa fa-close"
+				    actionListener="#{caixaBean.incluirMovimentoSalvar}" 
+				    oncomplete="if (!args.validationFailed){ PF('dlgNovoMovimento').hide();}"
+					update="formMovimentos msgNovoMov" />
+				<p:commandButton value="Cancelar" icon="fa fa-close"
+				    actionListener="#{caixaBean.incluirMovimentoCancelar}"
+					onclick="PF('dlgNovoMovimento').hide();" update="formMovimentos" />	
+			</center>
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog widgetVar="dlgRelCaixa" closable="true" modal="true" height="200" width="500">
+		<h:form id="formRelCaixa" target="_blank">
+			
+			<h3>Relatório do Caixa Selecionado</h3>
+
+
+			<br />
+			<center>
+				<p:commandButton value="Gerar" icon="fa fa-print"
+				    action="#{caixaBean.relCaixa}" ajax="false"
+				    oncomplete="PF('dlgRelCaixa').hide();"
+					 />
+				<p:commandButton value="Fechar" icon="fa fa-close"
+					onclick="PF('dlgRelCaixa').hide();"  />	
+			</center>
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog widgetVar="dlgExcluir" closable="true" modal="true" height="200" width="500">
+		<h:form id="formExcluir">
+			
+			<h3>Confirma exclusão do movimento?</h3>
+
+
+			<br />
+			<center>
+				<p:commandButton value="Confirmar" icon="fa fa-close"
+				    actionListener="#{caixaBean.excluirMovimentoConfirmar}" 
+				    oncomplete="PF('dlgExcluir').hide();"
+					update="formMovimentos" />
+				<p:commandButton value="Cancelar" icon="fa fa-close"
+					onclick="PF('dlgExcluir').hide();" update="formMovimentos" />	
+			</center>
+		</h:form>
+	</p:dialog>
+
+
+
+</h:body>
+</html>

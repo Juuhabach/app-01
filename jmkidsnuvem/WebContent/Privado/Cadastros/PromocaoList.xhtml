@@ -1,0 +1,111 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+    		.ui-outputlabel  {
+    			font-size: 15px !important;
+    			font-weight: bold;
+    			color: #000000;
+    		}
+	</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Promoções" rendered="#{promocaoBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid" >
+				<p:dataTable emptyMessage="Não há nenhuma promoção cadastrada." var="obj" value="#{promocaoBean.lista}" 
+							 selectionMode="single" selection="#{promocaoBean.selecionado}" rowKey="#{obj.id}"
+							 rows="5" paginator="true"
+                    		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    		 rowsPerPageTemplate="5,10,20"
+                    		 currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                                               			{currentPage} de {totalPages} páginas."
+				>
+					<p:ajax event="rowSelect" update="formEdit formList"/>
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Descrição">	
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+					<p:column headerText="Desconto">	
+						<h:outputText value="#{obj.percentualDesconto}" />
+					</p:column>
+					<p:column headerText="Início">
+						<h:outputText value="#{obj.dataHoraInicio}" />
+					</p:column>
+					<p:column headerText="Fim">
+						<h:outputText value="#{obj.dataHoraFim}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir" actionListener="#{promocaoBean.incluir}"
+		    						 icon="fa fa-plus" update="formEdit formList"/>
+		    		<p:commandButton value="Editar" actionListener="#{promocaoBean.editar}"
+		    				 		 icon="fa fa-edit" disabled="#{promocaoBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>
+		   			<p:commandButton value="Excluir" actionListener="#{promocaoBean.excluir}"
+		     				 		 icon="fa fa-trash" disabled="#{promocaoBean.selecionado == null}"
+		    				 		 onclick="return confirm('Excluir?')" update="formList"/>
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{promocaoBean.editando eq 'true'}" legend="Edição de Promoções">
+ 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+ 				<p:outputLabel for="codigo" value="Código"/>
+ 				<p:inputNumber id="codigo" value="#{promocaoBean.selecionado.id}" disabled="true"/>
+ 				<br/>
+ 				<p:outputLabel for="descricao" value="Descrição"/>
+ 				<p:inputText id="descricao" value="#{promocaoBean.selecionado.descricao}"/>
+				<br/>
+				<p:outputLabel value="Geral" style="margin-top: 15px;" />
+				<p:selectBooleanButton id="geral" offLabel="Não" onLabel="Sim" 
+ 									   onIcon="ui-icon-check" offIcon="ui-icon-close" style="width: 160px;"/>
+				<br/>
+ 				<p:outputLabel for="percentualDesconto" value="Desconto(%)"/>
+ 				<p:inputNumber id="percentualDesconto" symbol="%" decimalSeparator="." 
+ 							   symbolPosition="suffix" value="#{promocaoBean.selecionado.percentualDesconto}"/>
+				<br/>
+				<p:outputLabel for="dataHoraInicio" value="Início:" title="Data e horário de início."/>
+ 				<p:calendar value="#{promocaoBean.selecionado.dataHoraInicio}" pattern="dd/MM/yyyy HH:mm" mode="popup"
+ 							navigator="true" mask="true" showOn="button" id="dataHoraInicio"/>
+ 				<br/>
+				<p:outputLabel for="dataHoraFim" value="Fim:" title="Data e horário final."/>
+ 				<p:calendar value="#{promocaoBean.selecionado.dataHoraFim}" pattern="dd/MM/yyyy HH:mm" mode="popup"
+ 							navigator="true" mask="true" showOn="button" id="dataHoraFim"/>
+ 				<br/>
+ 				<p:outputLabel for="cpf" value="CPF"/>
+ 				<p:inputMask mask="999.999.999-99" id="cpf" value="#{promocaoBean.selecionado.cpf}"/>
+ 				<br/>
+ 				<p:outputLabel for="cnpj" value="CNPJ"/>
+ 				<p:inputMask mask="99.999.999/9999-99" id="cnpj" value="#{promocaoBean.selecionado.cnpj}"/>
+ 				<br/>
+ 				<p:outputLabel for="diaDaSemana" value="Dia da Semana"/>
+				<p:selectOneMenu id="diaDaSemana" value="#{promocaoBean.selecionado.diaDaSemana}" >
+					<f:selectItem itemLabel="Selecione um dia"/>
+					<f:selectItem itemValue="01" itemLabel="Domingo"/>
+					<f:selectItem itemValue="02" itemLabel="Segunda-feira"/>
+					<f:selectItem itemValue="03" itemLabel="Terça-feira"/>
+					<f:selectItem itemValue="04" itemLabel="Quarta-feira"/>
+					<f:selectItem itemValue="05" itemLabel="Quinta-feira"/>
+					<f:selectItem itemValue="06" itemLabel="Sexta-feira"/>
+					<f:selectItem itemValue="07" itemLabel="Sábado"/>
+				</p:selectOneMenu>
+			</p:panelGrid>
+			<br/>
+			<center>
+				<p:commandButton value="Salvar" actionListener="#{promocaoBean.salvar}"
+								 icon="fa fa-save" update="formList formEdit"/>
+				<p:commandButton value="Cancelar" actionListener="#{promocaoBean.cancelar}"
+								 icon="fa fa-close" immediate="true" update="formList formEdit"/>
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

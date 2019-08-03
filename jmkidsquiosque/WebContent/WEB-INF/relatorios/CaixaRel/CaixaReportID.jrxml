@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CaixaReportID" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c8845821-2317-4560-a80e-fd978e162dc1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TesteRelatorio"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<subDataset name="BrinquedoOperacao" uuid="cd0c3dbd-d665-4768-a153-d70edc66cdee">
+		<property name="com.jaspersoft.studio.data.sql.tables">
+			<![CDATA[cXVpb3NxdWUuYnJpbnF1ZWRvb3BlcmFjYW8gQVMgLDY1LDQ3LDkwOTE1MDI2LWQ0ODMtNGUwMi1h
+MzEyLTJkZDkxMWVhZGE0Nzs=]]>
+		</property>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TesteRelatorio"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT quiosque.brinquedooperacao.caixa_id,
+	quiosque.brinquedooperacao.valorprepago,
+	quiosque.brinquedooperacao.valorpospago,
+	quiosque.brinquedooperacao.valordesconto,
+	quiosque.brinquedooperacao.minutosdecorridos,
+	quiosque.brinquedooperacao.minutoscontratados,
+	quiosque.brinquedooperacao.justificativadesconto,
+	quiosque.brinquedooperacao.justificativacancelamento,
+	quiosque.brinquedooperacao.datahorainativacao,
+	quiosque.brinquedooperacao.datahoracontratado,
+	quiosque.brinquedooperacao.datahoraativacao,
+	quiosque.brinquedooperacao.datahoracancelamento
+FROM quiosque.brinquedooperacao]]>
+		</queryString>
+		<field name="caixa_id" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.label" value="caixa_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="valorprepago" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="valorprepago"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="valorpospago" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="valorpospago"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="valordesconto" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="valordesconto"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="minutosdecorridos" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="minutosdecorridos"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="minutoscontratados" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="minutoscontratados"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="justificativadesconto" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="justificativadesconto"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="justificativacancelamento" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="justificativacancelamento"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="datahorainativacao" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="datahorainativacao"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="datahoracontratado" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="datahoracontratado"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="datahoraativacao" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="datahoraativacao"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<field name="datahoracancelamento" class="java.sql.Timestamp">
+			<property name="com.jaspersoft.studio.field.label" value="datahoracancelamento"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="brinquedooperacao"/>
+		</field>
+		<group name="caixa_id">
+			<groupExpression><![CDATA[$F{caixa_id}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="ParCaixaID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT quiosque.caixa.*, nuvem.quiosque.*,
+              funabriu.nome funabriu_nome, 
+               funfechou.nome funfechou_nome 
+FROM quiosque.caixa 
+  LEFT JOIN nuvem.quiosque on nuvem.quiosque.id = quiosque.caixa.quiosque_id
+  LEFT JOIN nuvem.funcionario funabriu on funabriu.id = quiosque.caixa.funcionarioabriu_id
+  LEFT JOIN nuvem.funcionario funfechou on funfechou.id = quiosque.caixa.funcionariofechou_id
+WHERE 
+	 quiosque.caixa.id = $P{ParCaixaID} and
+	 quiosque.id = caixa.quiosque_id]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="datahoraabertura" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahoraabertura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="datahorafechamento" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahorafechamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="observacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="observacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="valorabertura" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valorabertura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="valorcontagem" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valorcontagem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="valordiferenca" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valordiferenca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="valorfechamento" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valorfechamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="versao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="versao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="quiosque_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="quiosque_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="funcionarioabriu_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="funcionarioabriu_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="funcionariofechou_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="funcionariofechou_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="caixa"/>
+	</field>
+	<field name="COLUMN_13" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="bairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bairro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="cep" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cep"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="chave" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="chave"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="complemento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="complemento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descricao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="endereco" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="endereco"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="local" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="local"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="nomecidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nomecidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="numero" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numero"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="ufcidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ufcidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="COLUMN_24" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="versao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="quiosque"/>
+	</field>
+	<field name="funabriu_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="funabriu_nome"/>
+	</field>
+	<field name="funfechou_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="funfechou_nome"/>
+	</field>
+	<variable name="QuiosqueID" class="java.lang.Long">
+		<variableExpression><![CDATA[$V{QuiosqueID}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{quiosque_id}]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="131">
+			<staticText>
+				<reportElement x="0" y="50" width="109" height="20" uuid="add5688e-93f4-46a4-b347-5ab33fa3a05f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Abertura: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="b4492845-f703-47cb-ae53-5238f94506a0"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="70" width="109" height="20" uuid="fbd5679a-a26d-450f-87c6-0135b4402622"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor de Abertura: ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="1" width="131" height="43" uuid="e3ef5124-96d9-4318-be04-fbd5dadcd864"/>
+				<imageExpression><![CDATA["../LogoJMKids.jpeg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="131" y="24" width="424" height="20" uuid="eec4cc78-acc5-472b-81ea-3d9089476522"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="44" width="555" height="1" uuid="9d1c8720-0bcc-4363-98a5-57f0fbed27c8"/>
+			</line>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="111" y="50" width="100" height="20" uuid="cc973939-3045-475f-9d1a-0f9d37dfc4db"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahoraabertura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="111" y="70" width="100" height="20" uuid="ad16b46f-f34e-420e-903f-7ad30df1b0f7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorabertura}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="50" width="160" height="20" uuid="cc6f95ad-0f40-4a61-9cd4-973a80013a6d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Fechamento: ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="432" y="50" width="123" height="20" uuid="e001956d-0fbc-47da-814d-2c90c1f69daf"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahorafechamento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="70" width="160" height="20" uuid="50be4082-2f40-4032-adc3-4138a6462788"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Fechamento: ]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="432" y="70" width="123" height="20" uuid="dd3eb298-2cb7-4945-b8d3-22e39f3fe77f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorfechamento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="90" width="160" height="20" uuid="be2d5957-d064-4496-9f9d-bc298687903f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor informado - contagem: ]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="432" y="90" width="123" height="20" uuid="63694d1a-9c3a-4b91-892a-e947d790fb25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorcontagem}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="110" width="160" height="20" uuid="e4b9628d-9f6c-49e9-9e0d-5cd714ad7ca7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Diferença de Caixa:]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="432" y="110" width="123" height="20" uuid="155f7d50-0e66-4d52-996b-3ea2bb529613"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valordiferenca}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="130" width="555" height="1" uuid="22f9e132-2802-41be-b7b1-5752e69ccec0"/>
+			</line>
+			<textField>
+				<reportElement x="131" y="1" width="424" height="20" uuid="d36c7039-f30c-4815-be70-e4f21f4c4e56"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório de Caixa"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="90" width="109" height="20" uuid="25bd9e9b-c94f-463f-a9b2-7cb3d1b877e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Funcionário Abriu: ]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="111" y="90" width="159" height="20" uuid="f4bdc74d-c643-4747-a039-b850eea7a926"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{funabriu_nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="109" height="20" uuid="468d4c80-490a-458e-920a-a09c0d40d01b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Funcionário Fechou: ]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤(#,##0.00)" isBlankWhenNull="true">
+				<reportElement x="111" y="110" width="159" height="20" uuid="2107e78b-b251-44a9-b651-3aae49ecbaf1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{funfechou_nome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="20" uuid="204cc5ee-0ff5-42b5-9a43-18cccc341af4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="ParCaixaID">
+					<subreportParameterExpression><![CDATA[$P{ParCaixaID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["MovimentosReportCaixaID.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20">
+			<subreport overflowType="Stretch">
+				<reportElement x="0" y="0" width="555" height="20" uuid="4ae3cfda-7f78-4926-aad5-30879e1d6fe0"/>
+				<subreportParameter name="ParCaixaID">
+					<subreportParameterExpression><![CDATA[$P{ParCaixaID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["OperacaoReportCaixaID.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-sources>
+	<data-source id="postgres-jdbc-16b67d70478-43386353f30cf34b" provider="postgresql" driver="postgres-jdbc" name="PostgreSQL - jmkidsquiosque" save-password="true" read-only="false">
+		<connection host="localhost" port="5432" server="" database="jmkidsquiosque" url="jdbc:postgresql://localhost:5432/jmkidsquiosque" user="jmkids" password="GQkNKUVQVAEBcuc=" home="postgresql-x64-9.5" type="dev">
+			<provider-property name="@dbeaver-show-non-default-db@" value="false"/>
+			<provider-property name="@dbeaver-show-template-db@" value="false"/>
+		</connection>
+	</data-source>
+	<filters/>
+</data-sources>

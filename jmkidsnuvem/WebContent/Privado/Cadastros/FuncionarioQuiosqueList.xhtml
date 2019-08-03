@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Funcionários do Quiosque"
+			rendered="#{quiosqueBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable
+					emptyMessage="Não há nenhum funcionário cadastrado neste quiosque."
+					var="obj" value="#{quiosqueBean.listaFuncionariosQuiosque}"
+					selectionMode="single"
+					selection="#{quiosqueBean.funcionarioQuiosqueSelecionado}"
+					rowKey="#{obj.id}">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{obj.funcionario.nome}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{quiosqueBean.incluirFuncionarioQuiosque}"
+						icon="fa fa-user-plus" update="formEdit formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{quiosqueBean.excluirFuncionarioQuiosque}"
+						icon="fa fa-minus"
+						disabled="#{quiosqueBean.funcionarioQuiosqueSelecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{quiosqueBean.editando eq 'true'}"
+			legend="Inclusão de Funcionários no Quiosque">
+			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid"
+				style="margin-top: 20px;">
+				<p:dataTable emptyMessage="Não há nenhum funcionário ativo"
+					var="obj" value="#{quiosqueBean.listaFuncionariosAtivos}" selectionMode="single"
+					selection="#{quiosqueBean.funcionarioQuiosqueSelecionado.funcionario}"
+					rowKey="#{obj.id}"  rows="10" >
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Nome" filterBy="#{obj.nome}" filterMatchMode="contains" sortBy="#{obj.nome}" >
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+				</p:dataTable>
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Adicionar Funcionário Selecionado" 
+				            disabled="#{quiosqueBean.funcionarioQuiosqueSelecionado.funcionario == null}"
+							actionListener="#{quiosqueBean.salvarFuncionarioQuiosque}"
+							icon="fa fa-save"  update="formEdit formList"  />
+				<p:commandButton value="Cancelar"
+					actionListener="#{quiosqueBean.cancelarFuncionarioQuiosque}"
+					icon="fa fa-close" immediate="true" update="formEdit formList"  />
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

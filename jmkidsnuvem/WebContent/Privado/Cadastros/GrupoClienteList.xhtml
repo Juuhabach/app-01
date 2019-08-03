@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+    		.ui-outputlabel  {
+    			font-size: 15px !important;
+    			font-weight: bold;
+    			color: #000000;
+    		}
+	</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Grupos de Clientes" rendered="#{grupoClienteBean.editando eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum grupo de clientes cadastrado." var="obj" value="#{grupoClienteBean.lista}" 
+							 selectionMode="single" selection="#{grupoClienteBean.selecionado}" rowKey="#{obj.id}"
+							 rows="5" paginator="true"
+                    		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    		 rowsPerPageTemplate="5,10,20"
+                    		 currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas."
+				>
+					<p:ajax event="rowSelect" update="formEdit formList"/>
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Descrição">	
+						<h:outputText value="#{obj.descricao}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir" actionListener="#{grupoClienteBean.incluir}"
+		    				 		 icon="fa fa-plus" update="formEdit formList"/>
+		    		<p:commandButton value="Editar" actionListener="#{grupoClienteBean.editar}"
+		    				 		 icon="fa fa-edit" disabled="#{grupoClienteBean.selecionado == null}" 
+		                     		 update="formEdit formList"/>
+		   			<p:commandButton value="Excluir" actionListener="#{grupoClienteBean.excluir}"
+		     				 		 icon="fa fa-trash" disabled="#{grupoClienteBean.selecionado == null}"
+		    				 		 onclick="return confirm('Excluir?')" update="formList"/>
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{grupoClienteBean.editando eq 'true'}" legend="Edição de Grupos de Clientes">
+ 			<p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+ 				<p:outputLabel for="codigo" value="Código"/>
+				<p:inputNumber id="codigo" value="#{grupoClienteBean.selecionado.id}" disabled="true"/>
+				<br/>
+				<p:outputLabel for="descricao" value="Descrição"/>
+				<p:inputText id="descricao" value="#{grupoClienteBean.selecionado.descricao}"/>		
+ 			</p:panelGrid>
+ 			<br/>
+			<center>
+				<p:commandButton value="Salvar" actionListener="#{grupoClienteBean.salvar}"
+								 icon="fa fa-save" update="formList formEdit"/>
+				<p:commandButton value="Cancelar" actionListener="#{grupoClienteBean.cancelar}"
+								 icon="fa fa-close" immediate="true" update="formList formEdit"/>
+			</center>
+		</p:fieldset>
+	</h:form>
+</h:body>
+</html>

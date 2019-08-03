@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<style type="text/css">
+.ui-outputlabel {
+	font-size: 15px !important;
+	font-weight: bold;
+	color: #000000;
+}
+</style>
+</h:head>
+<h:body>
+	<h:form id="formList">
+		<p:fieldset legend="Lista de Usuários"
+			rendered="#{usuarioBean.editando eq 'false' and usuarioBean.editandoSenha eq 'false'}">
+			<p:panelGrid columns="1" styleClass="ui-panelgrid">
+				<p:dataTable emptyMessage="Não há nenhum usuário cadastrado."
+					var="obj" value="#{usuarioBean.lista}" selectionMode="single"
+					selection="#{usuarioBean.selecionado}" rowKey="#{obj.id}" rows="5"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                             		            {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,20"
+					currentPageReportTemplate="{startRecord} até {endRecord} de {totalRecords} registros. 
+                             		                    {currentPage} de {totalPages} páginas.">
+					<p:ajax event="rowSelect" update="formEdit formList" />
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+					<p:column headerText="Login">
+						<h:outputText value="#{obj.login}" />
+					</p:column>
+				</p:dataTable>
+				<f:facet name="footer" style="background-color: white;">
+					<p:commandButton value="Incluir"
+						actionListener="#{usuarioBean.incluir}" icon="fa fa-plus"
+						update="formEdit formList" />
+					<p:commandButton value="Editar"
+						actionListener="#{usuarioBean.editar}" icon="fa fa-edit"
+						disabled="#{usuarioBean.selecionado == null}"
+						update="formEdit formList" />
+					<p:commandButton value="Alt senha"
+						actionListener="#{usuarioBean.editarSenha}" icon="fa fa-pencil"
+						disabled="#{usuarioBean.selecionado == null}"
+						update="formEditSenha formList" />
+					<p:commandButton value="Excluir"
+						actionListener="#{usuarioBean.excluir}" icon="fa fa-trash"
+						disabled="#{usuarioBean.selecionado == null}"
+						onclick="return confirm('Excluir?')" update="formList" />
+				</f:facet>
+			</p:panelGrid>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEdit">
+		<p:growl />
+		<p:fieldset rendered="#{usuarioBean.editando eq 'true'}"
+			legend="Edição de Usuários">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:outputLabel for="codigo" value="Código" />
+				<p:inputNumber id="codigo" value="#{usuarioBean.selecionado.id}"
+					disabled="true" decimalPlaces="0" />
+				<br />
+				<p:outputLabel for="nome" value="Nome" />
+				<p:inputText id="nome" value="#{usuarioBean.selecionado.nome}" />
+				<br />
+				<p:outputLabel for="login" value="Login" />
+				<p:inputText id="login" value="#{usuarioBean.selecionado.login}" />
+				<!-- <br/> -->
+				<!-- Se o objeto não tem ID então estamos cadastrando ele -->
+				<p:outputPanel rendered="#{usuarioBean.selecionado.id == null}"
+					style="margin-top: 20px;">
+					<p:outputLabel for="senha" value="Senha" />
+					<p:password id="senha" feedback="true" weakLabel="Muito fraca"
+						goodLabel="Senha razoável" strongLabel="Senha forte" inline="true"
+						promptLabel="Insira a sua senha" match="confirma" required="true"
+						validatorMessage="A senha e a confirmação estão diferentes"
+						value="#{usuarioBean.selecionado.senha}" />
+					<br />
+					<br />
+					<p:outputLabel for="confirma" value="Confirme a Senha" />
+					<p:password id="confirma" required="true" />
+				</p:outputPanel>
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{usuarioBean.salvar}" icon="fa fa-save"
+					update="formList formEdit" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{usuarioBean.cancelar}" icon="fa fa-close"
+					immediate="true" update="formList formEdit" />
+			</center>
+		</p:fieldset>
+	</h:form>
+	<h:form id="formEditSenha">
+		<p:growl />
+		<p:fieldset rendered="#{usuarioBean.editandoSenha eq 'true'}"
+			legend="Edição de Senha">
+			<p:panelGrid columns="1" layout="grid"
+				styleClass="ui-panelgrid-blank ui-fluid" style="margin-top: 20px;">
+				<p:outputLabel for="senha" value="Senha" />
+				<p:password id="senha" feedback="true" weakLabel="Muito fraca"
+					redisplay="true" goodLabel="Senha razoável"
+					strongLabel="Senha forte" inline="true"
+					promptLabel="Insira a sua senha" match="confirma" required="true"
+					validatorMessage="A senha e a confirmação estão diferentes"
+					value="#{usuarioBean.selecionado.senha}" />
+				<br />
+				<p:outputLabel for="confirma" value="Confirme a Senha" />
+				<p:password id="confirma" required="true" />
+			</p:panelGrid>
+			<br />
+			<center>
+				<p:commandButton value="Salvar"
+					actionListener="#{usuarioBean.salvar}" icon="fa fa-save"
+					update="formList formEditSenha" />
+				<p:commandButton value="Cancelar"
+					actionListener="#{usuarioBean.cancelar}" icon="fa fa-close"
+					immediate="true" update="formList formEditSenha" />
+			</center>
+		</p:fieldset>
+	</h:form>
+
+
+</h:body>
+</html>

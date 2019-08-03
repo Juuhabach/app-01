@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MovimentosReportCaixaID" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="be90250c-ba45-46af-8e96-e474c5cd92db">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="467"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="521"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JMKidsQuiosque"/>
+	<parameter name="ParCaixaID" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT quiosque.caixamovimento.quiosque_id,
+	quiosque.caixamovimento.caixa_id,
+	quiosque.caixamovimento.valor,
+	quiosque.caixamovimento.operacao,
+	quiosque.caixamovimento.descricao,
+	quiosque.caixamovimento.datahora
+FROM quiosque.caixamovimento
+WHERE caixa_id = $P{ParCaixaID}
+UNION 
+SELECT quiosque.caixamovimentodois.quiosque_id,
+	quiosque.caixamovimentodois.caixa_id,
+	quiosque.caixamovimentodois.valor,
+	cast(quiosque.caixamovimentodois.operacao as text),
+	quiosque.caixamovimentodois.descricao,
+	quiosque.caixamovimentodois.datahora
+FROM quiosque.caixamovimentodois
+WHERE caixa_id = $P{ParCaixaID}
+ORDER BY datahora asc]]>
+	</queryString>
+	<field name="quiosque_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="quiosque_id"/>
+	</field>
+	<field name="caixa_id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="caixa_id"/>
+	</field>
+	<field name="valor" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="valor"/>
+	</field>
+	<field name="operacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="operacao"/>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descricao"/>
+	</field>
+	<field name="datahora" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datahora"/>
+	</field>
+	<variable name="somaEntradas" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[(($F{operacao}.equals( "Entrada")||$F{operacao}.equals( "Recebimento")) ? $F{valor} : 0.0)]]></variableExpression>
+	</variable>
+	<variable name="somaSaidas" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[(($F{operacao}.equals( "Saida")||$F{operacao}.equals( "Pagamento")) ? $F{valor} : 0.0)]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="82" y="0" width="68" height="20" uuid="25eb4dd0-7eb8-40a1-8bf0-c0aa3f1fc08f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7d473e4b-90be-4b27-abd8-b4bec39ce1f7"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="0" width="80" height="20" uuid="22e3068b-45ac-4ee5-ac1e-79d356a61a02">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1c3538f5-7f1a-4586-9827-3ade5d06d3be"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data e Hora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="0" width="105" height="20" uuid="bd5f041e-fe64-4779-9b32-62700c480d5b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b6f908a3-9837-414c-80b5-bf22981d5846"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor (R$)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="0" width="300" height="20" uuid="961e8b60-5310-4f42-a442-dd88d92dacdd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="12ee8453-10e5-4281-b68e-eab3b55ad0d0"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="15" backcolor="#CCCCCC" uuid="669b7a38-52fa-4b77-9c70-3b7c8ac42ab4">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="82" y="0" width="68" height="15" uuid="91ac4016-8023-4025-97b0-0cc61e44314e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7d473e4b-90be-4b27-abd8-b4bec39ce1f7"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{operacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="0" width="78" height="15" uuid="123ffbb1-39bb-4358-953b-26a3bf645db9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1c3538f5-7f1a-4586-9827-3ade5d06d3be"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datahora}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)">
+				<reportElement x="449" y="0" width="105" height="15" uuid="f225b33e-331e-48a7-9e44-186a9df255c1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b6f908a3-9837-414c-80b5-bf22981d5846"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="150" y="0" width="300" height="15" uuid="e565fc87-d91e-425f-9794-b1ec50002576">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="12ee8453-10e5-4281-b68e-eab3b55ad0d0"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="18" backcolor="#CCCCCC" uuid="284b32d1-3b0e-46c9-9315-eaf2c9dd70a6">
+					<printWhenExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="90" height="19" uuid="7e6584a5-5fc0-42ca-b596-78fa4c83e46a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Entradas:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#;(-#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="92" y="0" width="98" height="19" uuid="1e6f40cb-7551-4094-9cb9-679e9a8b084b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaEntradas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="190" y="0" width="90" height="19" uuid="dbf53441-f177-4482-bd9e-584d3317c56f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Saídas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="0" width="70" height="19" uuid="77488be7-0c17-4e1d-9b41-886024de2af3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#;(-#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="90" height="19" uuid="9d313ecb-f081-485d-a4a4-4ebcb36dcf13"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaSaidas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(-#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="441" y="0" width="105" height="19" uuid="fb3244b5-9d0e-493d-8441-bf03ba5d795a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{somaEntradas}-$V{somaSaidas}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="19" width="555" height="1" uuid="e231c1f6-4211-404a-9ed0-7f2e652408c0"/>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

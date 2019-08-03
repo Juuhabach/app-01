@@ -1,0 +1,67 @@
+﻿----------------------------------------------------------------
+Adicionar usuário no contexto
+sudo nano /opt/tomcat/latest/conf/tomcat-users.xml
+ 
+ 
+<role rolename="manager-gui"/>
+<user username="admin" password="fabsoftpwd" roles="manager-gui"/>
+
+
+
+
+
+----------------------------------------------------------------
+Liberar contexto do app manager para acessar de outro ip. Comentar a tag Valve como abaixo
+
+sudo nano /opt/tomcat/latest/webapps/manager/META-INF/context.xml
+
+<Context antiResourceLocking="false" privileged="true" >
+<!--
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+-->
+<Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?Hash$
+</Context>
+
+
+
+
+
+----------------------------------------------------------------
+Alterar tamanho do arquivo de upload para deploy. O default é 50MB
+
+sudo nano /opt/tomcat/latest/webapps/manager/WEB-INF/web.xml
+
+    <multipart-config>
+      <!-- 50MB max -->
+      <max-file-size>104857600</max-file-size>
+      <max-request-size>104857600</max-request-size>
+      <file-size-threshold>0</file-size-threshold>
+    </multipart-config>
+
+	
+	
+
+
+----------------------------------------------------------------
+Se for preciso alterar as config da memória do tomcat
+sudo nano /opt/tomcat/latest/bin/startup.sh
+set JAVA_OPTS=%JAVA_OPTS% -Xms128M -Xmx512M -XX:PermSize=128m -XX:MaxPermSize=128m
+
+
+
+
+	
+----------------------------------------------------------------
+Reiniciar o servidor	
+sudo systemctl restart tomcat
+
+
+
+Log:
+sudo nano /opt/tomcat/latest/logs/catalina.out
+
+
+
+
+	
